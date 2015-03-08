@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Songbase.fm</string>
+    <string name="action_settings">Settings</string>
+    <string name="dummy">Video URL:</string>
+    <string name="app_id">467888830036802</string>
+   
+    <string name="searchhint">Search Songs</string>
+
+</resources>

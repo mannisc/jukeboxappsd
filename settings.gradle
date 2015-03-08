@@ -1,0 +1,4 @@
+include ':facebookSDK'
+include ':androidsupportv7appcompat'
+include ':googleplayservices_lib'
+include ':songbasefm'

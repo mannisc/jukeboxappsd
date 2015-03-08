@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Songbase.fm.iml" filepath="$PROJECT_DIR$/Songbase.fm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androidsupportv7appcompat/androidsupportv7appcompat.iml" filepath="$PROJECT_DIR$/androidsupportv7appcompat/androidsupportv7appcompat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/facebookSDK/facebookSDK.iml" filepath="$PROJECT_DIR$/facebookSDK/facebookSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/googleplayservices_lib/googleplayservices_lib.iml" filepath="$PROJECT_DIR$/googleplayservices_lib/googleplayservices_lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/songbasefm/songbasefm.iml" filepath="$PROJECT_DIR$/songbasefm/songbasefm.iml" />
+    </modules>
+  </component>
+</project>
+

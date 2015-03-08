@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="30dip" 
+        android:background="@drawable/listitem_background"
+    
+    >
+
+    <ImageView
+        android:id="@+id/imglist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/playlist" />
+
+    <TextView
+        android:id="@+id/namelist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imglist"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="12dip"
+        android:text="Test"
+        android:textSize="23sp"
+         android:maxLines="1"
+        android:singleLine="true"
+         />
+
+    <TextView
+        android:id="@+id/infolist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/namelist"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@id/imglist"
+        android:gravity="right"
+        android:text="Artist"
+        android:textSize="12sp" 
+         android:maxLines="1"
+        android:singleLine="true"/>
+
+</RelativeLayout>
