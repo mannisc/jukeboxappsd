@@ -95,7 +95,7 @@ public class Song extends MainListElement {
     public String getDisplayName() {
 
         if (artist != "")
-            return artist + " - " + name;
+            return  name+ " - " + artist;
         else
             return name;
     }

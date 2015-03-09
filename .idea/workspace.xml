@@ -33,7 +33,6 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.songbase.fm.androidapp" />
   </component>
   <component name="ChangeListManager">
@@ -62,73 +61,73 @@
       <file leaf-file-name="PlayController.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/PlayController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="8687" max-vertical-offset="11135">
-              <caret line="511" column="16" selection-start-line="511" selection-start-column="16" selection-end-line="511" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3016" max-vertical-offset="10353">
+              <caret line="227" column="89" selection-start-line="227" selection-start-column="89" selection-end-line="227" selection-end-column="89" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ServiceMessageHandler.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/ServiceMessageHandler.java">
+      <file leaf-file-name="MyMusicController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/mymusic/MyMusicController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1088" max-vertical-offset="1513">
-              <caret line="64" column="46" selection-start-line="64" selection-start-column="46" selection-end-line="64" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ServicePlayController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/ServicePlayController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="6086" max-vertical-offset="9605">
-              <caret line="406" column="0" selection-start-line="406" selection-start-column="0" selection-end-line="406" selection-end-column="0" />
+            <state vertical-scroll-proportion="-16.178572" vertical-offset="839" max-vertical-offset="3706">
+              <caret line="100" column="58" selection-start-line="100" selection-start-column="58" selection-end-line="100" selection-end-column="58" />
               <folding>
-                <element signature="e#2178#2184#0" expanded="true" />
-                <element signature="e#3596#4080#0" expanded="true" />
-                <element signature="e#4068#4069#0" expanded="true" />
-                <element signature="e#4202#4537#0" expanded="true" />
-                <element signature="e#4526#4527#0" expanded="true" />
-                <element signature="e#4590#4818#0" expanded="true" />
-                <element signature="e#4807#4808#0" expanded="true" />
-                <element signature="e#4861#5395#0" expanded="true" />
-                <element signature="e#5383#5384#0" expanded="true" />
-                <element signature="e#6070#7684#0" expanded="true" />
-                <element signature="e#7672#7673#0" expanded="true" />
-                <element signature="e#8183#11016#0" expanded="true" />
-                <element signature="e#11005#11006#0" expanded="true" />
-                <element signature="e#16426#16432#0" expanded="true" />
+                <element signature="e#3629#3650#0" expanded="true" />
+                <element signature="e#3708#3725#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SearchController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/search/SearchController.java">
+      <file leaf-file-name="Song.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/media/Song.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="782" max-vertical-offset="1836">
-              <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="924" max-vertical-offset="1581">
+              <caret line="97" column="24" selection-start-line="97" selection-start-column="24" selection-end-line="97" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SearchMode.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/viewmode/SearchMode.java">
+      <file leaf-file-name="ServicePlayController.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/ServicePlayController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1717">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.18478261" vertical-offset="0" max-vertical-offset="9282">
+              <caret line="55" column="13" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="13" />
+              <folding>
+                <element signature="e#16667#16673#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MyMediaPlayerService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/MyMediaPlayerService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2858" max-vertical-offset="4233">
+              <caret line="214" column="16" selection-start-line="214" selection-start-column="16" selection-end-line="214" selection-end-column="16" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UIController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/UIController.java">
+      <file leaf-file-name="AccountController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/account/AccountController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3111" max-vertical-offset="7735">
-              <caret line="183" column="41" selection-start-line="183" selection-start-column="41" selection-end-line="183" selection-end-column="41" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2739" max-vertical-offset="3315">
+              <caret line="194" column="71" selection-start-line="194" selection-start-column="71" selection-end-line="194" selection-end-column="71" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PersistenceController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/persistence/PersistenceController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="733" max-vertical-offset="1479">
+              <caret line="79" column="58" selection-start-line="79" selection-start-column="58" selection-end-line="79" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -2793,21 +2792,21 @@
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/ServiceMessageHandler.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/media/SongAction.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/MyMediaPlayerService.java" />
-        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/persistence/PersistenceController.java" />
-        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/media/Song.java" />
-        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/mymusic/MyMusicController.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/settings/Settings.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/MainActivity.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/misc/Utils.java" />
-        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/account/AccountController.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/TextWatcherAdapter.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/search/SearchController.java" />
-        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/PlayController.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/ClearableEditText.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/viewmode/SearchMode.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/UIController.java" />
+        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/account/AccountController.java" />
+        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/persistence/PersistenceController.java" />
+        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/mymusic/MyMusicController.java" />
+        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/media/Song.java" />
         <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/ServicePlayController.java" />
+        <option value="$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/PlayController.java" />
       </list>
     </option>
   </component>
@@ -3085,13 +3084,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1552" height="842" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="108" y="100" width="1328" height="626" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928804" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41812402" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34890512" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.354531" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -3099,37 +3099,36 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.8680445" sideWeight="0.14158577" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32750398" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.47883213" sideWeight="0.85841423" order="7" side_tool="false" content_ui="tabs" x="219" y="363" width="557" height="247" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="FLOATING" visible="false" weight="0.47883213" sideWeight="0.85841423" order="7" side_tool="false" content_ui="tabs" x="0" y="7" width="1525" height="801" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297587" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290938" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18632708" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18632708" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27993527" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35328466" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329927" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="108" y="100" width="1328" height="626" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20508744" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928804" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17372262" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="108" y="100" width="1328" height="626" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="108" y="100" width="1328" height="626" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.354531" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.8680445" sideWeight="0.14158577" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290938" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.8680445" sideWeight="0.14158577" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297587" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290938" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27993527" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -3147,8 +3146,8 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32750398" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.8680445" sideWeight="0.85841423" order="15" side_tool="false" content_ui="tabs" x="219" y="363" width="557" height="247" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18689321" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17372262" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
@@ -3356,29 +3355,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/persistence/PersistenceController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="813" max-vertical-offset="1479">
-          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/media/Song.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="731" max-vertical-offset="1581">
-          <caret line="51" column="45" selection-start-line="51" selection-start-column="45" selection-end-line="51" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/mymusic/MyMusicController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1587" max-vertical-offset="3519">
-          <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/list/ListController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1623" max-vertical-offset="2159">
@@ -3413,7 +3389,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2190" max-vertical-offset="2686">
           <caret line="155" column="21" selection-start-line="155" selection-start-column="21" selection-end-line="155" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3422,13 +3397,6 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="28" max-vertical-offset="629">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/account/AccountController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2831" max-vertical-offset="3332">
-          <caret line="213" column="44" selection-start-line="213" selection-start-column="44" selection-end-line="213" selection-end-column="44" />
         </state>
       </provider>
     </entry>
@@ -3458,17 +3426,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33195022" vertical-offset="21561" max-vertical-offset="85918">
           <caret line="1418" column="0" selection-start-line="1418" selection-start-column="0" selection-end-line="1418" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/MyMediaPlayerService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1637" max-vertical-offset="4760">
-          <caret line="103" column="44" selection-start-line="103" selection-start-column="44" selection-end-line="103" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3491,7 +3448,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1232" max-vertical-offset="8976">
           <caret line="85" column="48" selection-start-line="85" selection-start-column="48" selection-end-line="85" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3509,14 +3465,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/search/SearchController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="782" max-vertical-offset="1836">
-          <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/UIController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3111" max-vertical-offset="7735">
@@ -3525,42 +3473,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/PlayController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="8687" max-vertical-offset="11135">
-          <caret line="511" column="16" selection-start-line="511" selection-start-column="16" selection-end-line="511" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/ServicePlayController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6086" max-vertical-offset="9605">
-          <caret line="406" column="0" selection-start-line="406" selection-start-column="0" selection-end-line="406" selection-end-column="0" />
-          <folding>
-            <element signature="e#2178#2184#0" expanded="true" />
-            <element signature="e#3596#4080#0" expanded="true" />
-            <element signature="e#4068#4069#0" expanded="true" />
-            <element signature="e#4202#4537#0" expanded="true" />
-            <element signature="e#4526#4527#0" expanded="true" />
-            <element signature="e#4590#4818#0" expanded="true" />
-            <element signature="e#4807#4808#0" expanded="true" />
-            <element signature="e#4861#5395#0" expanded="true" />
-            <element signature="e#5383#5384#0" expanded="true" />
-            <element signature="e#6070#7684#0" expanded="true" />
-            <element signature="e#7672#7673#0" expanded="true" />
-            <element signature="e#8183#11016#0" expanded="true" />
-            <element signature="e#11005#11006#0" expanded="true" />
-            <element signature="e#16426#16432#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-21/android/widget/TextView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="155414">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3577,9 +3493,78 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/ui/viewmode/SearchMode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2040">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7245053" vertical-offset="0" max-vertical-offset="1717">
+          <caret line="47" column="10" selection-start-line="47" selection-start-column="10" selection-end-line="47" selection-end-column="10" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/search/SearchController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="782" max-vertical-offset="1836">
+          <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/account/AccountController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2739" max-vertical-offset="3315">
+          <caret line="194" column="71" selection-start-line="194" selection-start-column="71" selection-end-line="194" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/persistence/PersistenceController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="733" max-vertical-offset="1479">
+          <caret line="79" column="58" selection-start-line="79" selection-start-column="58" selection-end-line="79" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/mymusic/MyMusicController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.178572" vertical-offset="839" max-vertical-offset="3706">
+          <caret line="100" column="58" selection-start-line="100" selection-start-column="58" selection-end-line="100" selection-end-column="58" />
+          <folding>
+            <element signature="e#3629#3650#0" expanded="true" />
+            <element signature="e#3708#3725#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/media/Song.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="924" max-vertical-offset="1581">
+          <caret line="97" column="24" selection-start-line="97" selection-start-column="24" selection-end-line="97" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/MyMediaPlayerService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2858" max-vertical-offset="4233">
+          <caret line="214" column="16" selection-start-line="214" selection-start-column="16" selection-end-line="214" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/PlayController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3016" max-vertical-offset="10353">
+          <caret line="227" column="89" selection-start-line="227" selection-start-column="89" selection-end-line="227" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/songbasefm/src/main/java/com/songbase/fm/androidapp/playing/service/ServicePlayController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18478261" vertical-offset="0" max-vertical-offset="9282">
+          <caret line="55" column="13" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="13" />
+          <folding>
+            <element signature="e#16667#16673#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

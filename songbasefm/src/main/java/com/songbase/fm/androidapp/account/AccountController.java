@@ -192,8 +192,7 @@ public class AccountController {
                  */
                 if (json != null) {
 
-                    List<PlaylistListElement> list = MyMusicController.instance
-                            .parsePlaylistJSON(json);
+                    List<PlaylistListElement> list = MyMusicController.parsePlaylistJSON(json);
 
                     MyMusicController.instance.setPlaylistList(list);
 

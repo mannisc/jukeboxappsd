@@ -148,9 +148,12 @@ public class PlayController {
         activeSong = song;
         activePlaylistGid = song.getPlaylistGid();
 
-        infoText.setText(activeSong.getName() + " - "
-                + activeSong.getArtistName());
-
+        if(!infoText.getText().toString().equals(activeSong.getDisplayName())){
+            final Animation in = new AlphaAnimation(0.0f, 1.0f);
+            in.setDuration(350);
+            infoText.setText(activeSong.getDisplayName());
+            infoText.startAnimation(in);
+        }
         MainActivity.instance.uiController.setSongInfoBarEnabled(true, 1);
 
     }
@@ -222,17 +225,20 @@ public class PlayController {
     public void playSong(Song song) {
 
         //Same song
-        if (isStarted && this.activeSong != null && this.activeSong.getDisplayName().equals(song.getDisplayName())) {
+        if (isStarted && this.activeSong != null && this.activeSong.gid.equals(song.gid)) {
             onPlayButton();
         } else {
 
             isStarted = true;
             isPlaying = true;
+
+            playUpdateHandler.removeCallbacksAndMessages(null);
             isLoaded = false;
+            currentPosition = 0;
+            setCurrentBufferingPosition(0);
+            currentPositionText.setText("");
+            updateDurationText("");
 
-
-
-            onDurationChanged(-1);
             setPlayingSongInfo(song);
             startSongInService();
         }

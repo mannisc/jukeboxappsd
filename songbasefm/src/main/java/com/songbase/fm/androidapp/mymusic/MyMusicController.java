@@ -29,8 +29,6 @@ import com.songbase.fm.androidapp.misc.Utils;
 public class MyMusicController {
 
 
-    List<MainListElement> defaultListOptions = new ArrayList<MainListElement>();
-
     List<MainListElement> list = new ArrayList<MainListElement>();
 
     public static MyMusicController instance;
@@ -44,16 +42,14 @@ public class MyMusicController {
 
     public static long counterGlobalId = 0;
 
+    public static String allSongsPlaylistGid = "id_0";
+
+
 
     public MyMusicController(List<MainListElement> list) {
         MyMusicController.instance = this;
         this.list = list;
         aQuery = MainActivity.instance.aQuery;
-
-
-        Playlist playlistAllSongs = new PlaylistAllSongs("All Songs");
-
-        this.defaultListOptions.add(new PlaylistListElement(playlistAllSongs, new PlaylistAction(playlistAllSongs)));
 
 
     }
@@ -75,7 +71,6 @@ public class MyMusicController {
 
         this.list.clear();
 
-        this.list.addAll(this.defaultListOptions);
         this.list.addAll(list);
 
         Log.e("..c", Integer.toString(list.size()));
@@ -95,26 +90,31 @@ public class MyMusicController {
 
             Playlist playlist = ((PlaylistListElement) playlistElement).getPlaylist();
 
-            String playlistJSON = "{ \"name\": \"" + playlist.getName() + "\",\"gid\": \"" + playlist.getGid() + "\",\"data\": [";
+            if (!playlist.getGid().equals(MyMusicController.allSongsPlaylistGid)) {
 
-            String songsJSON = "";
-            List<MainListElement> playlistSongs = playlist.getList();
+                String playlistJSON = "{ \"name\": \"" + playlist.getName() + "\",\"gid\": \"" + playlist.getGid() + "\",\"data\": [";
 
-            for (MainListElement songElement : playlistSongs) {
-                Song song = ((SongListElement) songElement).getSong();
-                songsJSON = songsJSON + gson.toJson(song);
-                if (playlistSongs.indexOf(songElement) < playlistSongs.size() - 1)
-                    songsJSON = songsJSON + ",";
+                String songsJSON = "";
+                List<MainListElement> playlistSongs = playlist.getList();
+
+                for (MainListElement songElement : playlistSongs) {
+                    Song song = ((SongListElement) songElement).getSong();
+                    songsJSON = songsJSON + gson.toJson(song);
+                    if (playlistSongs.indexOf(songElement) < playlistSongs.size() - 1)
+                        songsJSON = songsJSON + ",";
+                }
+
+                //Insert songs into playlist
+                playlistJSON = playlistJSON + songsJSON;
+                playlistJSON = playlistJSON + "]}";
+
+                //insert Playlist into Playlist list
+                playlistsJSON = playlistsJSON + playlistJSON;
+                if (list.indexOf(playlistElement) < list.size() - 1)
+                    playlistsJSON = playlistsJSON + ",";
+
+
             }
-
-            //Insert songs into playlist
-            playlistJSON = playlistJSON + songsJSON;
-            playlistJSON = playlistJSON + "]}";
-
-            //insert Playlist into Playlist list
-            playlistsJSON = playlistsJSON + playlistJSON;
-            if (list.indexOf(playlistElement) < list.size() - 1)
-                playlistsJSON = playlistsJSON + ",";
 
         }
 
@@ -124,8 +124,9 @@ public class MyMusicController {
     }
 
 
-    public List<PlaylistListElement> parsePlaylistJSON(JSONObject json) {
+    public static List<PlaylistListElement> parsePlaylistJSON(JSONObject json) {
         List<PlaylistListElement> list = new ArrayList<PlaylistListElement>();
+        List<MainListElement> allSongs = new ArrayList<MainListElement>();
 
         if (json != null) {
 
@@ -149,9 +150,7 @@ public class MyMusicController {
                                     .getJSONObject("artist");
                             artist = artistJSON.getString("name");
                         } catch (JSONException e) {
-
                             artist = trackJSON.getString("artist");
-
                         }
 
                         boolean isBuffered;
@@ -171,9 +170,17 @@ public class MyMusicController {
                         Song track = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
                                 artist, trackJSON.getString("playlistgid"));
 
-
                         songs.add(new SongListElement(track, new SongAction(
                                 track)));
+
+
+                        //Add to all songs Playlist
+                        track = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
+                                artist, MyMusicController.allSongsPlaylistGid);
+
+                        allSongs.add(new SongListElement(track, new SongAction(
+                                track)));
+
 
                     }
 
@@ -190,6 +197,10 @@ public class MyMusicController {
             }
 
         }
+
+        Playlist playlist = new Playlist("All Songs", MyMusicController.allSongsPlaylistGid, allSongs);
+        list.add(0, new PlaylistListElement(playlist,
+                new PlaylistAction(playlist)));
 
         return list;
     }

@@ -62,7 +62,7 @@ public class PersistenceController {
 
             JSONObject json = new JSONObject(playlistsJSON);
 
-            List<PlaylistListElement> list = MyMusicController.instance
+            List<PlaylistListElement> list = MyMusicController
                     .parsePlaylistJSON(json);
             MyMusicController.instance.setPlaylistList(list);
 

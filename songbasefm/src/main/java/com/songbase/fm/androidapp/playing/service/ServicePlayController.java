@@ -114,8 +114,6 @@ public class ServicePlayController {
         this.serviceBufferController = serviceBufferController;
 
 
-
-
     }
 
 
@@ -216,13 +214,15 @@ public class ServicePlayController {
                         activeURL);
                 Log.e(" url",
                         url);
-                Log.e("JSON", json.toString());
+
 
                 if (activeURL.equals(url)) {
 
                     // status.getCode()
 
                     if (json != null) {
+
+                        Log.e("JSON", json.toString());
 
                         try {
                             String streamUrl = json.getString("streamURL");
@@ -253,7 +253,7 @@ public class ServicePlayController {
                 .header("Origin", "songbase.fm/app")
                 .header("Host", "songbase.fm:3001");
 
-        AQuery  aQuery = new AQuery(this.service);
+        AQuery aQuery = new AQuery(this.service);
         aQuery.ajax(url, JSONObject.class, -1, loadSongCallback);
 
     }
@@ -326,7 +326,15 @@ public class ServicePlayController {
                     } else
                         actMediaPlayer.stop();
 
+                }else{
+                    service.sendDuration(-1);
+                    service.sendLoaded();
                 }
+
+
+
+
+
             }
         });
         player.start();
@@ -405,7 +413,7 @@ public class ServicePlayController {
 
     public synchronized void reset() {
         updateProgressHandler.removeCallbacksAndMessages(null);
-        if(mediaPlayer!=null){
+        if (mediaPlayer != null) {
             mediaPlayer.setDisplay(null);
             mediaPlayer.reset();
         }
@@ -531,6 +539,11 @@ public class ServicePlayController {
 
     public void getPlaylistSongs(String gid, boolean forceUpdate) {
 
+        Log.e("getPlaylistSongs",gid);
+        Log.e("getPlaylistSongs? 0",Boolean.toString(gid.equals("0")));
+
+
+
 
         if (!gid.equals(activePlaylistGid) || forceUpdate) {
 
@@ -543,12 +556,17 @@ public class ServicePlayController {
 
                 JSONObject json = new JSONObject(playlistsJSON);
                 JSONArray playlistMatches = json.getJSONArray("items");
+                Log.e("getPlaylistSongs p",Integer.toString(playlistMatches.length()));
 
                 for (int i = 0; i < playlistMatches.length(); i++) {
                     JSONObject playlistJSON = playlistMatches.getJSONObject(i);
 
                     String actGid = playlistJSON.getString("gid");
-                    if (actGid.equals(gid) || gid.equals("")) {
+                    Log.e("getPlaylistSongs..","?");
+
+                    if (actGid.equals(gid) || gid.equals(MyMusicController.allSongsPlaylistGid)) {
+
+                        Log.e("getPlaylistSongs..","!");
 
                         JSONArray playlistSongs = playlistJSON.getJSONArray("data");
 
@@ -566,35 +584,24 @@ public class ServicePlayController {
 
                             }
 
-                            boolean isBuffered;
-                            try {
-                                isBuffered = trackJSON.getBoolean("isBuffered");
-                            } catch (JSONException e) {
-                                isBuffered = false;
-                            }
-                            boolean isConverted;
-                            try {
-                                isConverted = trackJSON.getBoolean("isConverted");
-                            } catch (JSONException e) {
-                                isConverted = false;//TODO
-                            }
-
+                            boolean isBuffered = trackJSON.getBoolean("isBuffered");
+                            boolean isConverted = trackJSON.getBoolean("isConverted");
 
                             Song track = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
                                     artist, trackJSON.getString("playlistgid"));
-
 
                             songs.add(track);
 
                         }
 
-                        playlist.clear();
-                        playlist = songs;
-                        activePlaylistGid = gid;
+
                     }
 
                 }
 
+                playlist.clear();
+                playlist = songs;
+                activePlaylistGid = gid;
 
             } catch (JSONException e) {
                 e.printStackTrace();
