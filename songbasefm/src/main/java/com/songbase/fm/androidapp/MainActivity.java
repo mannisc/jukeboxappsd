@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
 import android.view.View;
 
 import com.androidquery.AQuery;
@@ -18,18 +17,13 @@ import com.songbase.fm.androidapp.authentication.AuthController;
 import com.songbase.fm.androidapp.authentication.RSAUtils;
 import com.songbase.fm.androidapp.buffering.BufferController;
 import com.songbase.fm.androidapp.list.ListController;
-import com.songbase.fm.androidapp.media.PlaylistListElement;
 import com.songbase.fm.androidapp.misc.Utils;
-import com.songbase.fm.androidapp.mymusic.MyMusicController;
 import com.songbase.fm.androidapp.persistence.PersistenceController;
 import com.songbase.fm.androidapp.playing.PlayController;
 import com.songbase.fm.androidapp.settings.Settings;
 import com.songbase.fm.androidapp.ui.UIController;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.List;
 
 public class MainActivity extends Activity  {
 
@@ -49,6 +43,10 @@ public class MainActivity extends Activity  {
         super.onCreate(savedInstanceState);
         instance = this;
         destroyed = false;
+
+        if(this.getActionBar()!=null){
+            this.getActionBar().setBackgroundDrawable(null);
+        }
 
         RSAUtils.init();
 
@@ -80,20 +78,20 @@ public class MainActivity extends Activity  {
 
         //Offline, load offline Data if already user, elsewhise ask to create account
 
-        if (Utils.checkNetworkStatus() == 0) {
 
+        if (Utils.checkNetworkStatus() == 0) {
             persistenceController.loadStoredOfflineData();
             persistenceController.saveOfflineData();
-
         } else {
-           // Settings.setIsLoggedIn(false);
+            // Settings.setIsLoggedIn(false);
 
             // Nicht bereits eingeloggt
-            if (!Settings.isLoggedIn ) {//&& (AuthController.loginToken == null|| AuthController.loginToken.equals(""))
+            if (!Settings.isLoggedIn || (AuthController.loginToken == null|| AuthController.loginToken.equals(""))){
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
             } else {
                 // Auto login
+
                 accountController.singInAuto();
             }
         }

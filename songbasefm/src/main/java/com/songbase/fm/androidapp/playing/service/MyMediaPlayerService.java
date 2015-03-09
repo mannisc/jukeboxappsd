@@ -11,27 +11,20 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
-import android.webkit.URLUtil;
 
-import com.google.android.gms.games.Player;
 import com.google.gson.Gson;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.R;
 import com.songbase.fm.androidapp.media.Song;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 public class MyMediaPlayerService extends Service {
 
@@ -94,23 +87,24 @@ public class MyMediaPlayerService extends Service {
         if (intent.hasExtra(MESSENGER))
             messageHandler = (Messenger) intent.getExtras().get(MESSENGER);
 
+        Song intentSong=null;
+        if (intent.hasExtra(SONG))
+            intentSong = gson.fromJson(intent.getStringExtra(SONG), Song.class);
 
-        //Start new Song
+
+            //Start new Song
         if (intent.getBooleanExtra(START_LOADPLAY, false)) {
 
             //Load Song
-            if (intent.hasExtra(SONG)){
+            if (intentSong!=null){
                 if (servicePlayController.isPlaying)
                     servicePlayController.reset();
 
-                Song newSong = gson.fromJson(intent.getStringExtra(SONG), Song.class);
+                servicePlayController.startSong(intentSong);
 
+                Log.e("PLAYLIST!!!",intentSong.getPlaylistGid());
 
-                servicePlayController.startSong(newSong);
-
-                Log.e("PLAYLIST!!!",newSong.getPlaylistGid());
-
-                servicePlayController.getPlaylistSongs(newSong.getPlaylistGid(),false);
+                servicePlayController.getPlaylistSongs(intentSong.getPlaylistGid(),false);
 
             }
 
@@ -121,8 +115,18 @@ public class MyMediaPlayerService extends Service {
         } else if (intent.getBooleanExtra(START_PAUSE, false)) {
             servicePlayController.pause();
         } else if (intent.getBooleanExtra(START_PLAYNEXT, false)) {
+            if (servicePlayController.activeSong == null&&intentSong!=null){
+                servicePlayController.activeSong = intentSong;
+                servicePlayController.getPlaylistSongs(intentSong.getPlaylistGid(),false);
+            }
+
             servicePlayController.playNext();
         } else if (intent.getBooleanExtra(START_PLAYPREV, false)) {
+            if (servicePlayController.activeSong == null&&intentSong!=null){
+                servicePlayController.activeSong = intentSong;
+                servicePlayController.getPlaylistSongs(intentSong.getPlaylistGid(),false);
+            }
+
             servicePlayController.playPrev();
         } else if (intent.hasExtra(SEEKPOSITION)) {
             servicePlayController.setPositionPercent(intent.getIntExtra(SEEKPOSITION, -1));

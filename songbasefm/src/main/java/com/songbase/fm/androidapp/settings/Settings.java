@@ -7,9 +7,9 @@ public class Settings {
 
 	public static final String SETTINGS_NAME = "SongbaseSettings";
 
-
-
-    public static String serverURL = "http://songbase.fm:3001/";
+    public static String serverURL = "http://h2406563.stratoserver.net:3001/";
+            //"http://songbase.fm:3001/";
+    public static String serviceServerURL = "http://h2406563.stratoserver.net:3005/";
 
 	public static boolean isLoggedIn = false;
 	public static SharedPreferences preferences;
@@ -27,6 +27,6 @@ public class Settings {
 
 		SharedPreferences.Editor editor = Settings.preferences.edit();
 		editor.putBoolean("isLoggedIn", Settings.isLoggedIn);
-		editor.commit();
+		editor.apply();
 	}
 }

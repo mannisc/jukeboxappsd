@@ -585,4 +585,10 @@ public class LoginActivity extends PlusBaseActivity implements
 
 		}
 	}
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        MainActivity.instance.finish();
+    }
 }

@@ -148,7 +148,7 @@ public class PlayController {
         activeSong = song;
         activePlaylistGid = song.getPlaylistGid();
 
-        if(!infoText.getText().toString().equals(activeSong.getDisplayName())){
+        if (!infoText.getText().toString().equals(activeSong.getDisplayName())) {
             final Animation in = new AlphaAnimation(0.0f, 1.0f);
             in.setDuration(350);
             infoText.setText(activeSong.getDisplayName());
@@ -166,9 +166,7 @@ public class PlayController {
             //Pause/Play song in Service
 
             if (isPlaying) {
-
                 if (!isStarted) {
-
                     playSong(activeSong);
                 } else {
                     onPlay();
@@ -185,14 +183,19 @@ public class PlayController {
     public void onNextButton() {
         Log.e("PLAYNextBUTON", Boolean.toString(activeSong != null));
         if (activeSong != null) {
-            playUpdateHandler.removeCallbacksAndMessages(null);
+
+            isStarted = true;
+            isPlaying = true;
             isLoaded = false;
+
+            playUpdateHandler.removeCallbacksAndMessages(null);
             currentPosition = 0;
             setCurrentBufferingPosition(0);
             currentPositionText.setText("");
             updateDurationText("");
             playNextInService();
 
+            onPlay();
 
         }
     }
@@ -201,14 +204,20 @@ public class PlayController {
     public void onPrevButton() {
         Log.e("PLAYPrevBUTON", Boolean.toString(activeSong != null));
         if (activeSong != null) {
-            playUpdateHandler.removeCallbacksAndMessages(null);
+
+            isStarted = true;
+            isPlaying = true;
             isLoaded = false;
+
+            playUpdateHandler.removeCallbacksAndMessages(null);
             currentPosition = 0;
             setCurrentBufferingPosition(0);
             currentPositionText.setText("");
             updateDurationText("");
 
             playPrevInService();
+
+            onPlay();
 
         }
     }
@@ -231,9 +240,9 @@ public class PlayController {
 
             isStarted = true;
             isPlaying = true;
+            isLoaded = false;
 
             playUpdateHandler.removeCallbacksAndMessages(null);
-            isLoaded = false;
             currentPosition = 0;
             setCurrentBufferingPosition(0);
             currentPositionText.setText("");
@@ -241,6 +250,8 @@ public class PlayController {
 
             setPlayingSongInfo(song);
             startSongInService();
+
+            onPlay();
         }
 
     }
@@ -269,7 +280,7 @@ public class PlayController {
 
                                 @Override
                                 public void run() {
-                                    if(isLoaded)
+                                    if (isLoaded)
                                         updateShowedPosition();
 
                                 }
@@ -412,18 +423,12 @@ public class PlayController {
 
         intent.putExtra(MyMediaPlayerService.SONG, gson.toJson(activeSong));
 
-        Log.e("PLAYLISTGID SONG", gson.toJson(activeSong));
-
-        Log.e("PLAYLISTGID SONG", activeSong.getPlaylistGid());
-
 
         intent.putExtra(MyMediaPlayerService.PGID, activeSong.getPlaylistGid());
 
 
         MainActivity.instance.startService(intent);
 
-
-        onPlay();
 
     }
 
@@ -451,6 +456,7 @@ public class PlayController {
 
         Intent intent = new Intent(activity, MyMediaPlayerService.class);
         intent.putExtra(MyMediaPlayerService.START_PLAYNEXT, true);
+        intent.putExtra(MyMediaPlayerService.SONG, gson.toJson(activeSong));
         intent.putExtra("MESSENGER", new Messenger(messageHandler));
         activity.startService(intent);
     }
@@ -459,6 +465,7 @@ public class PlayController {
     private void playPrevInService() {
         Intent intent = new Intent(activity, MyMediaPlayerService.class);
         intent.putExtra(MyMediaPlayerService.START_PLAYPREV, true);
+        intent.putExtra(MyMediaPlayerService.SONG, gson.toJson(activeSong));
         intent.putExtra("MESSENGER", new Messenger(messageHandler));
 
         activity.startService(intent);
@@ -627,11 +634,9 @@ public class PlayController {
     }
 
     public void setCurrentBufferingPosition(int currentPosition) {
-            SeekBar songProgressBar = MainActivity.instance.uiController.songProgressBar;
-            songProgressBar.setSecondaryProgress(currentPosition);
+        SeekBar songProgressBar = MainActivity.instance.uiController.songProgressBar;
+        songProgressBar.setSecondaryProgress(currentPosition);
     }
-
-
 
 
     public void getLastSongInfo() {

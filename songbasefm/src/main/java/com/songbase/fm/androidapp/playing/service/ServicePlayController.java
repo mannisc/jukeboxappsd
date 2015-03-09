@@ -136,7 +136,6 @@ public class ServicePlayController {
                     }
                 }
 
-
                 return true;
             }
 
@@ -151,8 +150,6 @@ public class ServicePlayController {
                 mediaPlayer.seekTo(0);
                 instance.service.sendStopped();
                 playNext();
-
-
             }
         });
 
@@ -326,13 +323,10 @@ public class ServicePlayController {
                     } else
                         actMediaPlayer.stop();
 
-                }else{
+                } else {
                     service.sendDuration(-1);
                     service.sendLoaded();
                 }
-
-
-
 
 
             }
@@ -422,7 +416,10 @@ public class ServicePlayController {
 
 
     public synchronized void playPrev() {
+
+
         if (activeSong != null) {
+
             Song nextSong;
 
             reset();
@@ -447,13 +444,17 @@ public class ServicePlayController {
 
             startSong(nextSong);
 
-
         }
     }
 
 
     public synchronized void playNext() {
+
+
+
         if (activeSong != null) {
+
+
             Song nextSong;
 
             reset();
@@ -478,7 +479,6 @@ public class ServicePlayController {
 
 
             startSong(nextSong);
-
 
         }
     }
@@ -539,10 +539,8 @@ public class ServicePlayController {
 
     public void getPlaylistSongs(String gid, boolean forceUpdate) {
 
-        Log.e("getPlaylistSongs",gid);
-        Log.e("getPlaylistSongs? 0",Boolean.toString(gid.equals("0")));
-
-
+        Log.e("getPlaylistSongs", gid);
+        Log.e("getPlaylistSongs? 0", Boolean.toString(gid.equals("0")));
 
 
         if (!gid.equals(activePlaylistGid) || forceUpdate) {
@@ -556,17 +554,17 @@ public class ServicePlayController {
 
                 JSONObject json = new JSONObject(playlistsJSON);
                 JSONArray playlistMatches = json.getJSONArray("items");
-                Log.e("getPlaylistSongs p",Integer.toString(playlistMatches.length()));
+                Log.e("getPlaylistSongs p", Integer.toString(playlistMatches.length()));
 
                 for (int i = 0; i < playlistMatches.length(); i++) {
                     JSONObject playlistJSON = playlistMatches.getJSONObject(i);
 
                     String actGid = playlistJSON.getString("gid");
-                    Log.e("getPlaylistSongs..","?");
+                    Log.e("getPlaylistSongs..", "?");
 
                     if (actGid.equals(gid) || gid.equals(MyMusicController.allSongsPlaylistGid)) {
 
-                        Log.e("getPlaylistSongs..","!");
+                        Log.e("getPlaylistSongs..", "!");
 
                         JSONArray playlistSongs = playlistJSON.getJSONArray("data");
 

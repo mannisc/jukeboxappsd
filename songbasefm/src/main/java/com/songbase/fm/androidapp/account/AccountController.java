@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -46,11 +47,23 @@ public class AccountController {
 
             @Override
             public void callback(String url, String string, AjaxStatus status) {
+                Log.e("AUTO LOGIN ?", string);
 
-                if (string != null) {
+                Log.e("AUTO LOGIN ?", Boolean.toString(string==null));
+                Log.e("AUTO LOGIN ?",status.toString());
+
+                if (string != null&&string.contains("\"auth\":\"true\"")) {
+
                     mAuthTask = new UserAutoLoginTask(AuthController.loginToken);
                     mAuthTask.execute((Void) null);
+
+                //Auto login failed
+                }else{
+                    Settings.setIsLoggedIn(false);
+                    Intent intent = new Intent(MainActivity.instance, LoginActivity.class);
+                    MainActivity.instance.startActivity(intent);
                 }
+
             }
         };
 
@@ -58,7 +71,14 @@ public class AccountController {
         cb.encoding("UTF-16LE");
         cb.header("Referer", "songbase.fm");
 
+
         aQuery.ajax(cb);
+
+        Log.e("AUTO LOGIN","!!................");
+        Log.e("AUTO LOGIN",url);
+
+
+
 
     }
 
