@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.list.MainListElement;
+import com.songbase.fm.androidapp.ui.UIController;
 import com.songbase.fm.androidapp.ui.navigationbar.NavigationBar;
 
 public class GenresMode extends ViewMode {
@@ -21,14 +22,14 @@ public class GenresMode extends ViewMode {
 		MainActivity.instance.listController.setList(list);
 
 		// Navigate to Genres
-		MainActivity.instance.uiController.navigationBar.navigate(
+		UIController.instance.navigationBar.navigate(
 				NavigationBar.homeString, "Genres");
 
 	}
 
 	public void deactivate() {
 
-		MainActivity.instance.uiController.navigationBar.navigate(
+		UIController.instance.navigationBar.navigate(
 				NavigationBar.homeString, "");
 
 	}

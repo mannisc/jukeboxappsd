@@ -32,6 +32,8 @@
         <item name="actionBarTabTextStyle">@style/MyActionBarTabText</item>
         <item name="actionMenuTextColor">@color/white</item>
 
+
+        <item name="android:windowBackground">@color/black</item>
     </style>
 
     <!-- ActionBar styles -->

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,16 +26,25 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.R;
+import com.songbase.fm.androidapp.list.ListAdapter;
+import com.songbase.fm.androidapp.list.MainListElement;
+import com.songbase.fm.androidapp.list.OptionListElement;
+import com.songbase.fm.androidapp.media.Playlist;
+import com.songbase.fm.androidapp.media.PlaylistListElement;
 import com.songbase.fm.androidapp.media.Song;
+import com.songbase.fm.androidapp.media.SongListElement;
 import com.songbase.fm.androidapp.misc.CustomCallback;
 import com.songbase.fm.androidapp.misc.Utils;
 import com.songbase.fm.androidapp.mymusic.MyMusicController;
 import com.songbase.fm.androidapp.persistence.PersistenceController;
 import com.songbase.fm.androidapp.playing.service.MyMediaPlayerService;
 import com.songbase.fm.androidapp.playing.service.ServiceMessageHandler;
+import com.songbase.fm.androidapp.ui.UIController;
+import com.songbase.fm.androidapp.ui.viewmode.MainMode;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.util.List;
 
 public class PlayController {
 
@@ -49,7 +59,9 @@ public class PlayController {
 
 
     public Song activeSong = null;
+    public Playlist activePlaylist = null;
     public String activePlaylistGid = "";
+
 
     public int currentDuration = 0;
     public int currentPosition = 0;
@@ -63,6 +75,7 @@ public class PlayController {
 
     public static Gson gson = new Gson();
 
+    public ImageView coverImage;
     public TextView infoText;
     public TextView durationText;
     public TextView currentPositionText;
@@ -78,6 +91,9 @@ public class PlayController {
         playUpdateHandler = new Handler(activity.getMainLooper());
 
         messageHandler = new ServiceMessageHandler();
+
+        coverImage = (ImageView) MainActivity.instance.findViewById(R.id.coverImage);
+
 
         infoText = (TextView) MainActivity.instance.findViewById(R.id.infoText);
 
@@ -97,10 +113,12 @@ public class PlayController {
         updatePositionText((String) currentPositionText.getText());
 
 
-        SeekBar songProgressBar = MainActivity.instance.uiController.songProgressBar;
+        SeekBar songProgressBar = UIController.instance.songProgressBar;
 
 
         songProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -142,11 +160,13 @@ public class PlayController {
 
     public void setPlayingSongInfo(Song song) {
 
+
         // TODO if(activeSong!=null)
         Log.e("XXX Activity", "Set  Play Song Info");
 
         activeSong = song;
-        activePlaylistGid = song.getPlaylistGid();
+
+        setActivePlaylistByGid(song.getPlaylistGid());
 
         if (!infoText.getText().toString().equals(activeSong.getDisplayName())) {
             final Animation in = new AlphaAnimation(0.0f, 1.0f);
@@ -154,7 +174,8 @@ public class PlayController {
             infoText.setText(activeSong.getDisplayName());
             infoText.startAnimation(in);
         }
-        MainActivity.instance.uiController.setSongInfoBarEnabled(true, 1);
+
+        UIController.instance.setSongInfoBarEnabled(true, 1);
 
     }
 
@@ -223,6 +244,7 @@ public class PlayController {
     }
 
 
+
     private class LoadingCallback implements CustomCallback {
         @Override
         public void callbackString(String returnString) {
@@ -257,13 +279,22 @@ public class PlayController {
     }
 
     public void onPlay() {
+
+
+        MainActivity.instance.listController.refreshList();
+
+        //Set Cover Image
+        if (activeSong.getIcon() != null)
+            coverImage.setImageDrawable(activeSong.getIcon());
+
+
         if (isPlaying) {
             //Change Layout
             int sdk = android.os.Build.VERSION.SDK_INT;
             if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                MainActivity.instance.uiController.playButton.setBackgroundDrawable(MainActivity.instance.getResources().getDrawable(R.drawable.pausebutton));
+                UIController.instance.playButton.setBackgroundDrawable(MainActivity.instance.getResources().getDrawable(R.drawable.pausebutton));
             } else {
-                MainActivity.instance.uiController.playButton.setBackground(MainActivity.instance.getResources().getDrawable(R.drawable.pausebutton));
+                UIController.instance.playButton.setBackground(MainActivity.instance.getResources().getDrawable(R.drawable.pausebutton));
             }
         }
 
@@ -301,9 +332,9 @@ public class PlayController {
             //Change Layout
             int sdk = android.os.Build.VERSION.SDK_INT;
             if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                MainActivity.instance.uiController.playButton.setBackgroundDrawable(MainActivity.instance.getResources().getDrawable(R.drawable.playbutton));
+                UIController.instance.playButton.setBackgroundDrawable(MainActivity.instance.getResources().getDrawable(R.drawable.playbutton));
             } else {
-                MainActivity.instance.uiController.playButton.setBackground(MainActivity.instance.getResources().getDrawable(R.drawable.playbutton));
+                UIController.instance.playButton.setBackground(MainActivity.instance.getResources().getDrawable(R.drawable.playbutton));
             }
         }
     }
@@ -377,7 +408,7 @@ public class PlayController {
         updatePositionText(formattedDate);
 
 
-        SeekBar songProgressBar = MainActivity.instance.uiController.songProgressBar;
+        SeekBar songProgressBar = UIController.instance.songProgressBar;
 
         if (currentDuration > 0)
             songProgressBar.setProgress((int) ((float) this.currentPosition
@@ -505,17 +536,17 @@ public class PlayController {
         PlayController.instance.onCurrentPositionChanged(0);
         PlayController.instance.updateShowedPosition();
 
-        MainActivity.instance.uiController.surfaceViewBlack.setVisibility(View.VISIBLE);
+        UIController.instance.surfaceViewBlack.setVisibility(View.VISIBLE);
     }
 
     public void onLoaded() {
 
         //Song is ready to Play
         //Enable Progressbar
-        MainActivity.instance.uiController.setSongProgressBarEnabled(true, 1);
+        UIController.instance.setSongProgressBarEnabled(true, 1);
         isLoaded = true;
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
-        in.setDuration(250);
+        in.setDuration(700);
         currentPositionText.startAnimation(in);
         durationText.startAnimation(in);
         updateShowedPosition();
@@ -528,8 +559,8 @@ public class PlayController {
         } catch (Exception e) {
         }
 
-        if (!isVideo || !MainActivity.instance.uiController.showVideo) {
-            View surfaceViewParent = MainActivity.instance.uiController.surfaceViewParent;
+        if (!isVideo || !UIController.instance.showVideo) {
+            View surfaceViewParent = UIController.instance.surfaceViewParent;
             android.view.ViewGroup.LayoutParams lp = surfaceViewParent.getLayoutParams();
             lp.height = 0;
             surfaceViewParent.setLayoutParams(lp);
@@ -544,14 +575,14 @@ public class PlayController {
 
                     SurfaceHolder actSurfaceHolder;
                     do {
-                        synchronized (MainActivity.instance.uiController.surfaceLock) {
+                        synchronized (UIController.instance.surfaceLock) {
                             final SurfaceHolder surfaceHolder;
-                            final View surfaceViewParent = MainActivity.instance.uiController.surfaceViewParent;
+                            final View surfaceViewParent = UIController.instance.surfaceViewParent;
                             final android.view.ViewGroup.LayoutParams lp = surfaceViewParent.getLayoutParams();
                             final int screenWidth = ((WindowManager) MainActivity.instance.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
 
                             //Get the SurfaceView layout parameters
-                            surfaceHolder = MainActivity.instance.uiController.surfaceHolder;
+                            surfaceHolder = UIController.instance.surfaceHolder;
                             actSurfaceHolder = surfaceHolder;
 
 
@@ -589,7 +620,7 @@ public class PlayController {
                             mainHandler.post(runnable);
                             if (surfaceHolder == null) {
                                 try {
-                                    MainActivity.instance.uiController.surfaceLock.wait();
+                                    UIController.instance.surfaceLock.wait();
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
@@ -601,7 +632,7 @@ public class PlayController {
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
-                            MainActivity.instance.uiController.surfaceViewBlack.setVisibility(View.INVISIBLE);
+                            UIController.instance.surfaceViewBlack.setVisibility(View.INVISIBLE);
                         }
                     };
                     mainHandler.post(runnable);
@@ -634,7 +665,7 @@ public class PlayController {
     }
 
     public void setCurrentBufferingPosition(int currentPosition) {
-        SeekBar songProgressBar = MainActivity.instance.uiController.songProgressBar;
+        SeekBar songProgressBar = UIController.instance.songProgressBar;
         songProgressBar.setSecondaryProgress(currentPosition);
     }
 
@@ -650,10 +681,56 @@ public class PlayController {
 
             setPlayingSongInfo(lastActiveSong);
 
-            this.activePlaylistGid = data.getString("activePlaylistGid", "");
-
+            setActivePlaylistByGid(data.getString("activePlaylistGid", ""));
         }
 
+    }
+
+    public boolean isPlayingSong(Song song) {
+        return song.getPlaylistGid().equals(MainActivity.instance.playController.activePlaylistGid)&&song.gid.equals(MainActivity.instance.playController.activeSong.gid);
+    }
+
+    public Song getSongFromSongGid(String songGid) {
+
+        if(activePlaylist!=null){
+            for (MainListElement  songElement  : activePlaylist.getList()) {
+                Song song = ((SongListElement)songElement).getSong();
+                if(song.gid.equals(songGid))
+                    return song;
+            }
+        }
+
+        return null;
+    }
+
+
+
+    public Playlist getPlaylistFromPlaylistGid(String playlistGid) {
+        for (MainListElement playlistElement : MyMusicController.instance.list) {
+            PlaylistListElement playlistListElement = (PlaylistListElement) playlistElement;
+            Playlist playlist = playlistListElement.getPlaylist();
+            if (playlist.getGid().equals(playlistGid)) {
+                return playlist;
+            }
+        }
+        return null;
+    }
+
+    public void setActivePlaylistByGid(String playlistGid) {
+        activePlaylist = getPlaylistFromPlaylistGid(playlistGid);
+        if (activePlaylist != null) {
+            activePlaylistGid = playlistGid;
+
+            OptionListElement currentPlaylistElement = ((MainMode) (UIController.viewModes[UIController.MAINMODE]).mode).currentPlaylistElement;
+            currentPlaylistElement.info = activePlaylist.getName();
+            currentPlaylistElement.listLayout = ListAdapter.ListLayout.NAMEINFO;
+
+        }
+    }
+
+
+    public Playlist getActivePlaylist() {
+        return activePlaylist;
     }
 
 

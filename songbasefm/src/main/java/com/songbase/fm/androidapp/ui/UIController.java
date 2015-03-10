@@ -31,6 +31,7 @@ import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.R;
 import com.songbase.fm.androidapp.playing.service.MyMediaPlayerService;
 import com.songbase.fm.androidapp.ui.navigationbar.NavigationBar;
+import com.songbase.fm.androidapp.ui.viewmode.CurrentPlaylistMode;
 import com.songbase.fm.androidapp.ui.viewmode.ExploreMode;
 import com.songbase.fm.androidapp.ui.viewmode.GenresMode;
 import com.songbase.fm.androidapp.ui.viewmode.MainMode;
@@ -59,13 +60,18 @@ public class UIController implements android.view.SurfaceHolder.Callback {
 
     public static ViewMode[] viewModes;
 
+
+    //View Modes
     public static ViewMode viewMode;
+
+    public static int MODESCOUNT = 6;
 
     public static int MAINMODE = 0;
     public static int SEARCHMODE = 1;
     public static int EXPLOREMODE = 2;
     public static int GENRESMODE = 3;
     public static int MYMUSICMODE = 4;
+    public static int CURRENTPLAYLISTMODE = 5;
 
 
     private boolean softkeyboardVisible;
@@ -78,27 +84,36 @@ public class UIController implements android.view.SurfaceHolder.Callback {
     public final Object surfaceLock = new Object();
     public boolean showVideo = false;
 
+    public static UIController instance;
 
     @SuppressLint("NewApi")
-    public UIController(Activity activity) {
+    public UIController(final Activity activity) {
+
+        instance = this;
 
         softkeyboardVisible = false;
 
         this.activity = activity;
 
-        viewModes = new ViewMode[5];
+        // Navigation Bar
+        navigationBar = new NavigationBar();
+
+        //View Modes
+        viewModes = new ViewMode[MODESCOUNT];
         viewModes[MAINMODE] = new MainMode().mode;
         viewModes[SEARCHMODE] = new SearchMode().mode;
         viewModes[EXPLOREMODE] = new ExploreMode().mode;
         viewModes[GENRESMODE] = new GenresMode().mode;
         viewModes[MYMUSICMODE] = new MyMusicMode().mode;
+        viewModes[CURRENTPLAYLISTMODE] = new CurrentPlaylistMode().mode;
+
 
         for (ViewMode viewMode : viewModes) {
             viewMode.init();
         }
 
         // Mode that defines the UI State
-        viewMode = viewModes[0];
+        viewMode = viewModes[MAINMODE];
         viewMode.activate();
 
 
@@ -162,8 +177,6 @@ public class UIController implements android.view.SurfaceHolder.Callback {
         setSongProgressBarEnabled(false, 0);
 
 
-        // Navigation Bar
-        navigationBar = new NavigationBar();
 
 
         //Handle layout change due to keyboard visibility changes
@@ -172,17 +185,15 @@ public class UIController implements android.view.SurfaceHolder.Callback {
             public void onVisibilityChanged(boolean visible) {
                 softkeyboardVisible = visible;
 
-                View controls = (View) MainActivity.instance
-                        .findViewById(R.id.controls);
-                View songProgressBar = (View) MainActivity.instance.uiController.songProgressBar;
-
                 //Keyboard is visible, hide Controls
                 if (softkeyboardVisible) {
 
-                    controls.setVisibility(View.GONE);
+                    View controls = (View) MainActivity.instance
+                            .findViewById(R.id.controls);
 
-                    if (MainActivity.instance.playController.isLoaded)
-                        setSongProgressBarEnabled(false, 0);
+                    controls.setVisibility(View.GONE);
+                    songProgressBar.setVisibility(View.GONE);
+
 
                     //Keyboard is not visible, show Controls
                 } else {
@@ -191,11 +202,12 @@ public class UIController implements android.view.SurfaceHolder.Callback {
                         public void run() {
                             if (!softkeyboardVisible) {
 
-                                View controls = (View) MainActivity.instance
+                                View controls =  MainActivity.instance
                                         .findViewById(R.id.controls);
                                 controls.setVisibility(View.VISIBLE);
 
-                                setSongProgressBarEnabled(true, 0);
+                                songProgressBar.setVisibility(View.VISIBLE);
+
 
                             }
 
@@ -213,32 +225,8 @@ public class UIController implements android.view.SurfaceHolder.Callback {
 
 
     public boolean isModeActive(int mode) {
-        return MainActivity.instance.uiController.viewMode == MainActivity.instance.uiController.viewModes[mode];
+        return UIController.viewMode == UIController.viewModes[mode];
     }
-
-
-    /**
-     * typeInfoValue:
-     * 0: Menü points
-     * 0: Playlists
-     * 1: Songs
-     * @return typeInfoValue
-
-    public int getDisplayedTypeInfo(){
-
-    if( viewMode == viewModes[4]){
-
-
-    if(viewModes[4].isSubModeActive())
-    return 2;
-    else
-    return 2;
-
-
-    }
-    return 0;
-    }
-     */
 
 
     /**
@@ -279,6 +267,9 @@ public class UIController implements android.view.SurfaceHolder.Callback {
      * @param enabled
      */
     public void setSongInfoBarEnabled(final boolean enabled, final float durationMultiplier) {
+        if(true)
+            return;
+
         if (songInfoBarEnabled != enabled) {
             songInfoBarEnabled = enabled;
             // Get a handler that can be used to post to the main thread
@@ -308,6 +299,10 @@ public class UIController implements android.view.SurfaceHolder.Callback {
      * @param enabled
      */
     public void setSongProgressBarEnabled(final boolean enabled, final float durationMultiplier) {
+
+        if(true)
+            return;
+
         if (songProgressBarEnabled != enabled) {
             songProgressBarEnabled = enabled;
             // Get a handler that can be used to post to the main thread
@@ -374,7 +369,7 @@ public class UIController implements android.view.SurfaceHolder.Callback {
                 }
             }
 
-            synchronized (MainActivity.instance.uiController.surfaceLock) {
+            synchronized (UIController.instance.surfaceLock) {
                 surfaceLock.notify();
             }
 

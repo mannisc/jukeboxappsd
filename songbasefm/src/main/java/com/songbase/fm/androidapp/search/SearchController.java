@@ -66,16 +66,30 @@ public class SearchController {
                             list.clear();
 
                             try { //In case of empty search json throws error
-                                if (MainActivity.instance.uiController.isModeActive(UIController.SEARCHMODE)) {
+                                if (UIController.instance.isModeActive(UIController.SEARCHMODE)) {
                                     JSONArray trackmatches = json
                                             .getJSONObject("results")
                                             .getJSONObject("trackmatches")
                                             .getJSONArray("track");
                                     for (int i = 0; i < trackmatches.length(); i++) {
-                                        JSONObject track = trackmatches
+                                        JSONObject trackJSON = trackmatches
                                                 .getJSONObject(i);
-                                        Song song = new Song(track.getString("name"),
-                                                track.getString("artist"));
+                                        Song song = new Song(trackJSON.getString("name"),
+                                                trackJSON.getString("artist"));
+
+
+
+                                        try {
+                                            String image =  ((JSONObject)trackJSON.getJSONArray("image").get(2)).getString("#text");
+                                            List<Song> songsIcon = new ArrayList<Song>();
+                                            songsIcon.add(song);
+                                            Song.loadIcon(image,songsIcon);
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+
                                         list.add(new SongListElement(song,
                                                 new SongAction(song)));
                                     }

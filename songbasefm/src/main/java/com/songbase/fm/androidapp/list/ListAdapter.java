@@ -3,8 +3,11 @@ package com.songbase.fm.androidapp.list;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,159 +16,174 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.R;
 
 public class ListAdapter extends ArrayAdapter<MainListElement> implements
-		SectionIndexer {
+        SectionIndexer {
 
-	private List<MainListElement> list;
-	private Context context;
-	private static String sections = "abcdefghilmnopqrstuvz";
-	private int oldPosition = 0;
+    private List<MainListElement> list;
+    private Context context;
+    private static String sections = "abcdefghilmnopqrstuvz";
+    private int oldPosition = 0;
 
-	public static enum ListLayout {
-		NAME, NAMEINFO
-	};
+    public static enum ListLayout {
+        NAME, NAMEINFO
+    }
 
-	public ListAdapter(List<MainListElement> list, Context ctx) {
-		super(ctx, R.layout.nameinforowlayout, list);
-		this.list = list;
-		this.context = ctx;
-	}
+    ;
 
-	public List<MainListElement> getList() {
-		return list;
-	}
+    public ListAdapter(List<MainListElement> list, Context ctx) {
+        super(ctx, R.layout.nameinforowlayout, list);
+        this.list = list;
+        this.context = ctx;
+    }
 
-	public void setList(List<MainListElement> list) {
+    public List<MainListElement> getList() {
+        return list;
+    }
 
-		this.list = list;
+    public void setList(List<MainListElement> list) {
 
-		this.notifyDataSetChanged();
+        this.list = list;
 
-	}
+        this.notifyDataSetChanged();
 
-	public int getCount() {
-		return list.size();
-	}
+    }
 
-	public MainListElement getItem(int position) {
-		return list.get(position);
-	}
+    public int getCount() {
+        return list.size();
+    }
 
-	public long getItemId(int position) {
-		return list.get(position).hashCode();
-	}
+    public MainListElement getItem(int position) {
+        return list.get(position);
+    }
 
-	// TODO adapt layout
+    public long getItemId(int position) {
+        return list.get(position).hashCode();
+    }
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+    // TODO adapt layout
 
-		MainListElement listElement = list.get(position);
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-		ListHolder holder = new ListHolder();
+        MainListElement listElement = list.get(position);
 
-		boolean redraw = false;
+        ListHolder holder = new ListHolder();
 
-		if (convertView == null
-				|| (convertView != null && (((ListHolder) convertView.getTag()).infoLayout != (listElement
-						.getListLayout() == ListLayout.NAMEINFO)))) {
+        boolean redraw = false;
 
-			redraw = true;
+        if (convertView == null
+                || (convertView != null && (((ListHolder) convertView.getTag()).infoLayout != (listElement
+                .getListLayout() == ListLayout.NAMEINFO)))) {
 
-		}
-		// First let's verify the convertView is not null
-		if (redraw) {
+            redraw = true;
 
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+        // First let's verify the convertView is not null
+        if (redraw) {
 
-			if (listElement.getListLayout() == ListLayout.NAMEINFO) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-				convertView = inflater
-						.inflate(R.layout.nameinforowlayout, null);
+            if (listElement.getListLayout() == ListLayout.NAMEINFO) {
 
-				TextView infoView = (TextView) convertView
-						.findViewById(R.id.infolist);
-				/* YOUR CHOICE OF COLOR */
-				infoView.setTextColor(Color.WHITE);
+                convertView = inflater
+                        .inflate(R.layout.nameinforowlayout, null);
 
-				holder.infoView = infoView;
+                TextView infoView = (TextView) convertView
+                        .findViewById(R.id.infolist);
+                /* YOUR CHOICE OF COLOR */
+                infoView.setTextColor(Color.WHITE);
 
-			} else {
-				convertView = inflater.inflate(R.layout.namerowlayout, null);
+                holder.infoView = infoView;
 
-			}
+            } else {
+                convertView = inflater.inflate(R.layout.namerowlayout, null);
 
-			ImageView imageView = (ImageView) convertView
-					.findViewById(R.id.imglist);
+            }
 
-			holder.imageView = imageView;
+            ImageView imageView = (ImageView) convertView
+                    .findViewById(R.id.imglist);
 
-			TextView nameView = (TextView) convertView
-					.findViewById(R.id.namelist);
+            holder.imageView = imageView;
 
-			holder.nameView = nameView;
-			nameView.setTextColor(Color.WHITE);
+            ImageView imageViewTop = (ImageView) convertView
+                    .findViewById(R.id.imglisttop);
 
-			convertView.setTag(holder);
-		} else {
-			holder = (ListHolder) convertView.getTag();
+            holder.imageView = imageView;
+            holder.imageViewTop = imageViewTop;
 
-		}
 
-		holder.infoLayout = (listElement.getListLayout() == ListLayout.NAMEINFO);
+            TextView nameView = (TextView) convertView
+                    .findViewById(R.id.namelist);
 
-		parent.setBackgroundColor(Color.TRANSPARENT);
+            holder.nameView = nameView;
+            nameView.setTextColor(Color.WHITE);
 
-		holder.imageView.setImageBitmap(listElement.getIcon());
+            convertView.setTag(holder);
+        } else {
+            holder = (ListHolder) convertView.getTag();
+        }
 
-		holder.nameView.setText(listElement.getName());
+        holder.infoLayout = (listElement.getListLayout() == ListLayout.NAMEINFO);
 
-		if (holder.infoView != null)
-			holder.infoView.setText(listElement.getInfo());
+        parent.setBackgroundColor(Color.TRANSPARENT);
 
-		return convertView;
-	}
+        holder.imageView.setImageDrawable(listElement.getIcon());
+        holder.imageView.setAlpha((float)(listElement.getIconAlpha())/255f);
+
+        Drawable drawableTop = listElement.getIconTop();
+        holder.imageViewTop.setImageDrawable(drawableTop);
+
+
+        holder.nameView.setText(listElement.getName());
+
+        if (holder.infoView != null)
+            holder.infoView.setText(listElement.getInfo());
+
+        return convertView;
+    }
 
 	/* *********************************
 	 * We use the holder pattern It makes the view faster and avoid finding the
 	 * component *********************************
 	 */
 
-	private static class ListHolder {
-		public boolean infoLayout;
-		public ImageView imageView;
-		public TextView nameView;
-		public TextView infoView;
-	}
+    private static class ListHolder {
+        public boolean infoLayout;
+        public ImageView imageView;
+        public ImageView imageViewTop;
+        public TextView nameView;
+        public TextView infoView;
+    }
 
-	@Override
-	public int getPositionForSection(int section) {
-		for (int i = 0; i < this.getCount(); i++) {
-			String item = this.getItem(i).getName().toLowerCase();
-			if (item.charAt(0) == sections.charAt(section)) {
-				oldPosition = i;
-				return i;
-			}
+    @Override
+    public int getPositionForSection(int section) {
+        for (int i = 0; i < this.getCount(); i++) {
+            String item = this.getItem(i).getName().toLowerCase();
+            if (item.charAt(0) == sections.charAt(section)) {
+                oldPosition = i;
+                return i;
+            }
 
-		}
-		return oldPosition;
-	}
+        }
+        return oldPosition;
+    }
 
-	@Override
-	public int getSectionForPosition(int arg0) {
-		return 0;
-	}
+    @Override
+    public int getSectionForPosition(int arg0) {
+        return 0;
+    }
 
-	@Override
-	public Object[] getSections() {
-		String[] sectionsArr = new String[sections.length()];
-		for (int i = 0; i < sections.length(); i++)
-			sectionsArr[i] = "" + sections.charAt(i);
+    @Override
+    public Object[] getSections() {
+        String[] sectionsArr = new String[sections.length()];
+        for (int i = 0; i < sections.length(); i++)
+            sectionsArr[i] = "" + sections.charAt(i);
 
-		return sectionsArr;
+        return sectionsArr;
 
-	}
+    }
 
 }

@@ -19,62 +19,62 @@ import com.songbase.fm.androidapp.misc.Utils;
 
 public class ListController {
 
-	List<MainListElement> list;
+    List<MainListElement> list;
 
-	ListAdapter listAdapter;
-	FastSearchListView fastSearchListView;
+    ListAdapter listAdapter;
+    FastSearchListView fastSearchListView;
 
-	public static boolean useSections;
+    public static boolean useSections;
 
-	public ListController(Activity activity) {
+    public ListController(Activity activity) {
 
-		list = new ArrayList<MainListElement>();
-		useSections = false;
+        list = new ArrayList<MainListElement>();
+        useSections = false;
 
-		fastSearchListView = (FastSearchListView) activity
-				.findViewById(R.id.listView);
+        fastSearchListView = (FastSearchListView) activity
+                .findViewById(R.id.listView);
 
-		listAdapter = new ListAdapter(list, activity);
+        listAdapter = new ListAdapter(list, activity);
 
-		fastSearchListView.setAdapter(listAdapter);
+        fastSearchListView.setAdapter(listAdapter);
 
-		// React to user clicks on item
-		fastSearchListView
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // React to user clicks on item
+        fastSearchListView
+                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-					public void onItemClick(AdapterView<?> parentAdapter,
-							View view, int position, long id) {
+                    public void onItemClick(AdapterView<?> parentAdapter,
+                                            View view, int position, long id) {
 
-						MainListElement listElement = list.get(position);
+                        MainListElement listElement = list.get(position);
 
-						listElement.executeAction();
+                        listElement.executeAction();
 
-						// TextView clickedView = (TextView) view;
+                        // TextView clickedView = (TextView) view;
 
-					}
-				});
+                    }
+                });
 
-		// we register for the contextmneu
-		activity.registerForContextMenu(fastSearchListView);
+        // we register for the contextmneu
+        activity.registerForContextMenu(fastSearchListView);
 
-	}
+    }
 
 
-	public void onMenu(ContextMenu menu, ContextMenuInfo menuInfo) {
-		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
-		MainListElement listElement = listAdapter.getItem(aInfo.position);
+    public void onMenu(ContextMenu menu, ContextMenuInfo menuInfo) {
+        AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+        MainListElement listElement = listAdapter.getItem(aInfo.position);
         if (listElement instanceof SongListElement) {
             menu.setHeaderTitle(listElement.getName());
 
-            if(!((SongListElement) listElement).getSong().isConverted||!((SongListElement) listElement).getSong().isBuffered){
+            if (!((SongListElement) listElement).getSong().isConverted || !((SongListElement) listElement).getSong().isBuffered) {
                 menu.add(1, 1, 1, "Prebuffer Song");
             }
             menu.add(1, 2, 2, "Delete");
         }
 
-	}
+    }
 
-	public boolean onItemSelected(MenuItem item) {
+    public boolean onItemSelected(MenuItem item) {
 
         AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
                 .getMenuInfo();
@@ -93,8 +93,6 @@ public class ListController {
                 MainActivity.instance.bufferController.bufferSong(((SongListElement) listElement).getSong());
 
 
-
-
                 break;
             case 2:
                 //Todo delete
@@ -107,23 +105,30 @@ public class ListController {
         }
 
 
-
-
         return true;
-	}
+    }
 
-	public void setList(List<MainListElement> list) {
-		this.list = list;
-		listAdapter.setList(list);
-	}
+    public void setList(List<MainListElement> list) {
+        if (list == null)
+            list = new ArrayList<MainListElement>();
+        this.list = list;
+        listAdapter.setList(list);
+    }
 
 
-    public ListView getView(){
+    public ListView getView() {
         return fastSearchListView;
     }
 
+    public void refreshList() {
+        if (listAdapter != null)
+            listAdapter.notifyDataSetChanged();
+    }
+
+
+
 	/*
-	 * // Handle user click public void addPlanet(View view) { final Dialog d =
+     * // Handle user click public void addPlanet(View view) { final Dialog d =
 	 * new Dialog(this); d.setContentView(R.layout.dialog);
 	 * d.setTitle("Add planet"); d.setCancelable(true);
 	 * 

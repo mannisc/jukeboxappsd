@@ -6,6 +6,7 @@ import java.util.List;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.mymusic.MyMusicController;
+import com.songbase.fm.androidapp.ui.UIController;
 import com.songbase.fm.androidapp.ui.navigationbar.NavigationBar;
 
 public class MyMusicMode extends ViewMode {
@@ -15,7 +16,7 @@ public class MyMusicMode extends ViewMode {
 	private MyMusicController myMusicController;
 
 	public MyMusicMode() {
-		super.id = 4;
+        super.id = UIController.MYMUSICMODE;
 	}
 
 	public void init() {
@@ -28,13 +29,13 @@ public class MyMusicMode extends ViewMode {
 		MainActivity.instance.listController.setList(list);
 
 		// Navigate to My Music
-		MainActivity.instance.uiController.navigationBar.navigate(
+		UIController.instance.navigationBar.navigate(
 				NavigationBar.homeString, "My Playlists");
 
 	}
 
 	public void deactivate() {
-		MainActivity.instance.uiController.navigationBar.navigate(
+		UIController.instance.navigationBar.navigate(
 				NavigationBar.homeString, "");
 
 	}

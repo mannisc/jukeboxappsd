@@ -11,6 +11,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -88,8 +89,10 @@ public class MyMediaPlayerService extends Service {
             messageHandler = (Messenger) intent.getExtras().get(MESSENGER);
 
         Song intentSong=null;
-        if (intent.hasExtra(SONG))
+        if (intent.hasExtra(SONG)){
             intentSong = gson.fromJson(intent.getStringExtra(SONG), Song.class);
+
+        }
 
 
             //Start new Song

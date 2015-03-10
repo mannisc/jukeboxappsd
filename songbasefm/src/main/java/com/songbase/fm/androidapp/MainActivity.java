@@ -41,12 +41,11 @@ public class MainActivity extends Activity  {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         instance = this;
         destroyed = false;
 
-        if(this.getActionBar()!=null){
-            this.getActionBar().setBackgroundDrawable(null);
-        }
 
         RSAUtils.init();
 
@@ -59,7 +58,6 @@ public class MainActivity extends Activity  {
 
         Log.e("TOKEN: ", AuthController.loginToken);
 
-        setContentView(R.layout.activity_main);
 
         aQuery = new AQuery(this);
 
@@ -151,10 +149,10 @@ public class MainActivity extends Activity  {
     @Override
     public void onBackPressed() {
 
-        if (UIController.viewMode.id == 0) {
+        if (UIController.viewMode.id == UIController.MAINMODE) {
             moveTaskToBack(true);
         } else {// Not Main Mode
-            uiController.setMode(0);
+            UIController.instance.navigationBar.navigateBack();
         }
 
     }

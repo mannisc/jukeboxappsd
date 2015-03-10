@@ -91,7 +91,8 @@
             android:textSize="17sp"
 
             android:background="@null"
-            android:layout_marginLeft="0dp" />
+            android:layout_marginLeft="0dp"
+            android:singleLine="true" />
 
         <View
             android:id="@+id/navigationarrow"
@@ -107,7 +108,8 @@
             android:text=""
             android:textColor="#fff"
             android:textSize="17sp"
-            android:background="@null" />
+            android:background="@null"
+            android:singleLine="true" />
 
     </LinearLayout>
 
@@ -252,7 +254,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/bottom"
         android:background="@drawable/blackbacktop"
         android:focusable="false"
         android:paddingBottom="0dp"
@@ -262,5 +264,12 @@
         android:progressDrawable="@drawable/customprogressbar"
         android:thumb="@drawable/transparent"
     />
+
+    <View
+        android:id="@+id/bottom"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+     />
 
 </RelativeLayout>

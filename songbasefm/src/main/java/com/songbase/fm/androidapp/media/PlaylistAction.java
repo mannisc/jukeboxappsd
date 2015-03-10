@@ -3,6 +3,8 @@ package com.songbase.fm.androidapp.media;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.list.MainListElement.Action;
 import com.songbase.fm.androidapp.mymusic.MyMusicController;
+import com.songbase.fm.androidapp.ui.UIController;
+import com.songbase.fm.androidapp.ui.navigationbar.NavigationBar;
 
 public class PlaylistAction implements Action {
 
@@ -17,11 +19,9 @@ public class PlaylistAction implements Action {
 
 		MyMusicController.instance.isSubModeActive = true;
 
-        MyMusicController.instance.activePlaylistGid = this.playlist.getGid();
-
 		MainActivity.instance.listController.setList(this.playlist.getList());
 
-		MainActivity.instance.uiController.navigationBar.navigate("My Playlists",
+		UIController.instance.navigationBar.navigate(NavigationBar.homeString,
 				this.playlist.name);
 
 	}

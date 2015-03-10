@@ -25,11 +25,12 @@ import com.songbase.fm.androidapp.media.Song;
 import com.songbase.fm.androidapp.media.SongAction;
 import com.songbase.fm.androidapp.media.SongListElement;
 import com.songbase.fm.androidapp.misc.Utils;
+import com.songbase.fm.androidapp.playing.PlayController;
 
 public class MyMusicController {
 
 
-    List<MainListElement> list = new ArrayList<MainListElement>();
+    public List<MainListElement> list = new ArrayList<MainListElement>();
 
     public static MyMusicController instance;
 
@@ -45,7 +46,6 @@ public class MyMusicController {
     public static String allSongsPlaylistGid = "id_0";
 
 
-
     public MyMusicController(List<MainListElement> list) {
         MyMusicController.instance = this;
         this.list = list;
@@ -55,23 +55,14 @@ public class MyMusicController {
     }
 
 
-    public String getActivePlaylistGid() {
-        if (isSubModeActive)
-            return activePlaylistGid;
-        else
-            return "";
-    }
-
-    public void setActivePlaylistGid(String activePlaylistGid) {
-        this.activePlaylistGid = activePlaylistGid;
-    }
-
-
     public void setPlaylistList(List<PlaylistListElement> list) {
 
         this.list.clear();
-
         this.list.addAll(list);
+
+        if (PlayController.instance.activeSong != null)
+            PlayController.instance.setActivePlaylistByGid(PlayController.instance.activeSong.getPlaylistGid());
+
 
         Log.e("..c", Integer.toString(list.size()));
 
@@ -174,12 +165,30 @@ public class MyMusicController {
                                 track)));
 
 
+
+
                         //Add to all songs Playlist
-                        track = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
+                        Song trackAll = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
                                 artist, MyMusicController.allSongsPlaylistGid);
 
-                        allSongs.add(new SongListElement(track, new SongAction(
-                                track)));
+
+                        trackAll.album = playlistJSON.getString("name");
+
+                        allSongs.add(new SongListElement(trackAll, new SongAction(
+                                trackAll)));
+
+
+                        try {
+                            String image =  ((JSONObject)trackJSON.getJSONArray("image").get(2)).getString("#text");
+                            List<Song> songsIcon = new ArrayList<Song>();
+                            songsIcon.add(trackAll);
+                            songsIcon.add(track);
+
+                            Song.loadIcon(image,songsIcon);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
 
                     }

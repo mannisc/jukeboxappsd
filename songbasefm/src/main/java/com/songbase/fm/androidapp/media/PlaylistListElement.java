@@ -2,6 +2,8 @@ package com.songbase.fm.androidapp.media;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.list.ListAdapter;
@@ -11,8 +13,6 @@ public class PlaylistListElement extends MainListElement {
 
 	private Playlist playlist;
 
-	private Bitmap icon;
-
 	public ListAdapter.ListLayout getListLayout() {
 		return ListAdapter.ListLayout.NAME;
 	}
@@ -20,17 +20,10 @@ public class PlaylistListElement extends MainListElement {
 	public PlaylistListElement(Playlist playlist, Action action) {
 		this.playlist = playlist;
 		this.action = action;
-
-		int imageResource = MainActivity.instance.getResources().getIdentifier(
-				"playlist", "drawable", MainActivity.instance.getPackageName());
-
-		this.icon = BitmapFactory.decodeResource(
-				MainActivity.instance.getResources(), imageResource);
 	}
 
-	public Bitmap getIcon() {
-
-		return this.icon;
+	public Drawable getIcon() {
+		return playlist.getIcon();
 	}
 
 	public String getName() {
@@ -40,7 +33,6 @@ public class PlaylistListElement extends MainListElement {
 	public String getInfo() {
 		return "";
 	}
-
 
     public Playlist getPlaylist(){
         return playlist;

@@ -17,6 +17,7 @@ import com.songbase.fm.androidapp.list.ListController;
 import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.search.DelayedTextWatcher;
 import com.songbase.fm.androidapp.search.SearchController;
+import com.songbase.fm.androidapp.ui.UIController;
 import com.songbase.fm.androidapp.ui.navigationbar.NavigationBar;
 
 public class SearchMode extends ViewMode {
@@ -26,7 +27,7 @@ public class SearchMode extends ViewMode {
 	private SearchController searchController;
 
 	public SearchMode() {
-		super.id = 1;
+        super.id = UIController.SEARCHMODE;
 	}
 
 	public void init() {
@@ -68,14 +69,14 @@ public class SearchMode extends ViewMode {
 		searchText.setVisibility(View.VISIBLE);
 		searchText.requestFocus();
 
-		MainActivity.instance.uiController.showKeyboard();
+		UIController.instance.showKeyboard();
 
 		// Set list
 		MainActivity.instance.listController.setList(list);
 
 		// Navigate to Search
 
-		MainActivity.instance.uiController.navigationBar.navigate(
+		UIController.instance.navigationBar.navigate(
 				NavigationBar.homeString, "Search");
 
         MainActivity.instance.listController.getView().setStackFromBottom(false);
@@ -90,7 +91,7 @@ public class SearchMode extends ViewMode {
 
         MainActivity.instance.listController.getView().setStackFromBottom(true);
 
-        MainActivity.instance.uiController.hideKeyboard();
+        UIController.instance.hideKeyboard();
 
 
 
@@ -107,7 +108,7 @@ public class SearchMode extends ViewMode {
 				.findViewById(R.id.searchText);
 		searchText.setVisibility(View.GONE);
 
-		MainActivity.instance.uiController.navigationBar.navigate(
+		UIController.instance.navigationBar.navigate(
 				NavigationBar.homeString, "");
 
 	}

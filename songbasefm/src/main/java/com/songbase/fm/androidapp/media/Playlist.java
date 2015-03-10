@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.list.ListAdapter;
@@ -13,55 +15,56 @@ import com.songbase.fm.androidapp.list.MainListElement;
 public class Playlist extends MainListElement {
 
 
-	public String name;
+    public String name;
 
     public String gid;
 
     List<MainListElement> list = new ArrayList<MainListElement>();
 
-	private Bitmap icon;
+    private Drawable icon;
 
-	public ListAdapter.ListLayout getListLayout() {
-		return ListAdapter.ListLayout.NAME;
-	}
+    public ListAdapter.ListLayout getListLayout() {
+        return ListAdapter.ListLayout.NAME;
+    }
 
-	public Playlist(String name, String gid,List<MainListElement> list) {
+    public Playlist(String name, String gid,List<MainListElement> list) {
 
-		this.name = name;
+        this.name = name;
         this.gid = gid;
         this.list = list;
 
-		int imageResource = MainActivity.instance.getResources().getIdentifier(
-				"playlist", "drawable", MainActivity.instance.getPackageName());
-		this.icon = BitmapFactory.decodeResource(
-				MainActivity.instance.getResources(), imageResource);
-	}
+        int imageResource = MainActivity.instance.getResources().getIdentifier(
+                "playlist", "drawable", MainActivity.instance.getPackageName());
+        this.icon =  new BitmapDrawable(MainActivity.instance.getResources(),BitmapFactory.decodeResource(
+                MainActivity.instance.getResources(), imageResource));
 
-	public Bitmap getIcon() {
+    }
 
-		return this.icon;
-	}
+    public Drawable getIcon() {
 
-	public String getName() {
-		return name;
-	}
+        return this.icon;
+    }
 
-	public List<MainListElement> getList() {
-		return list;
-	}
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Get Info to Songs displayed in List
-	 */
+    public List<MainListElement> getList() {
+        return list;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Get Info to Songs displayed in List
+     */
 
-	@Override
-	public String getInfo() {
-		return "";
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getInfo() {
+        return "";
+    }
 
     public String getGid() {
         return gid;

@@ -1,5 +1,6 @@
 package com.songbase.fm.androidapp.playing.service;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -61,8 +62,15 @@ public class ServiceMessageHandler extends Handler {
 
         } else if (data.getString(MESSAGETYPE).equals(MESSAGETYPE_INFO)) {
 
+            Song playedSong = gson.fromJson(data.getString("SONG"), Song.class);
 
-            PlayController.instance.setPlayingSongInfo(gson.fromJson(data.getString("SONG"), Song.class));
+
+            if(!playedSong.gid.equals(PlayController.instance.activeSong.gid)){
+                Song localSong = PlayController.instance.getSongFromSongGid(playedSong.gid);
+                if(localSong!=null){
+                    PlayController.instance.setPlayingSongInfo(localSong);
+                }
+            }
 
             boolean newIsPlaying = data.getBoolean("ISPLAYING",false);
 
