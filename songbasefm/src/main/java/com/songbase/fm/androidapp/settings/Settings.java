@@ -7,9 +7,11 @@ public class Settings {
 
 	public static final String SETTINGS_NAME = "SongbaseSettings";
 
-    public static String serverURL = "http://h2406563.stratoserver.net:3001/";
+    public static String pageURL = "http://h2406563.stratoserver.net";
+
+    public static String serverURL = pageURL+":3001/";
             //"http://songbase.fm:3001/";
-    public static String serviceServerURL = "http://h2406563.stratoserver.net:3005/";
+    public static String serviceServerURL = pageURL+":3005/";
 
 	public static boolean isLoggedIn = false;
 	public static SharedPreferences preferences;

@@ -4,27 +4,39 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.gson.Gson;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.R;
+import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.media.Song;
+import com.songbase.fm.androidapp.misc.DownloadImageTask;
+import com.songbase.fm.androidapp.mymusic.MyMusicController;
+import com.songbase.fm.androidapp.persistence.PersistenceController;
 
+import static com.songbase.fm.androidapp.misc.DownloadImageTask.*;
 
 
 public class MyMediaPlayerService extends Service {
@@ -43,6 +55,8 @@ public class MyMediaPlayerService extends Service {
     public static final String START_PLAY = "START_PLAY";
     public static final String START_PLAYNEXT = "START_PLAYNEXT";
     public static final String START_PLAYPREV = "START_PLAYPREV";
+    public static final String START_STOP = "START_STOP";
+
 
     public static final String GET_INFO = "GET_INFO";
     public static final String SEEKPOSITION = "SEEKPOSITION";
@@ -77,6 +91,7 @@ public class MyMediaPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e("!!!!", "onStartCommand");
 
         if (intent == null)
             return Service.START_STICKY;
@@ -88,54 +103,41 @@ public class MyMediaPlayerService extends Service {
         if (intent.hasExtra(MESSENGER))
             messageHandler = (Messenger) intent.getExtras().get(MESSENGER);
 
-        Song intentSong=null;
-        if (intent.hasExtra(SONG)){
+        Song intentSong = null;
+        if (intent.hasExtra(SONG))
             intentSong = gson.fromJson(intent.getStringExtra(SONG), Song.class);
 
-        }
-
-
-            //Start new Song
+        //Start new Song
         if (intent.getBooleanExtra(START_LOADPLAY, false)) {
-
             //Load Song
-            if (intentSong!=null){
+            if (intentSong != null) {
                 if (servicePlayController.isPlaying)
                     servicePlayController.reset();
 
+                servicePlayController.getPlaylistSongs(intentSong.getPlaylistGid(), false);
                 servicePlayController.startSong(intentSong);
 
-                Log.e("PLAYLIST!!!",intentSong.getPlaylistGid());
-
-                servicePlayController.getPlaylistSongs(intentSong.getPlaylistGid(),false);
-
             }
-
 
 
         } else if (intent.getBooleanExtra(START_PLAY, false)) {
-            servicePlayController.play();
+            this.play();
         } else if (intent.getBooleanExtra(START_PAUSE, false)) {
-            servicePlayController.pause();
+            Log.e("!!!!", "intent.getBooleanExtra(START_PAUSE)");
+            this.pause();
         } else if (intent.getBooleanExtra(START_PLAYNEXT, false)) {
-            if (servicePlayController.activeSong == null&&intentSong!=null){
-                servicePlayController.activeSong = intentSong;
-                servicePlayController.getPlaylistSongs(intentSong.getPlaylistGid(),false);
-            }
-
-            servicePlayController.playNext();
+            this.next(intentSong);
         } else if (intent.getBooleanExtra(START_PLAYPREV, false)) {
-            if (servicePlayController.activeSong == null&&intentSong!=null){
-                servicePlayController.activeSong = intentSong;
-                servicePlayController.getPlaylistSongs(intentSong.getPlaylistGid(),false);
-            }
-
-            servicePlayController.playPrev();
+            this.prev(intentSong);
+        }else if (intent.getBooleanExtra(START_STOP, false)) {
+            cancelNotifcation();
+            this.pause();
         } else if (intent.hasExtra(SEEKPOSITION)) {
             servicePlayController.setPositionPercent(intent.getIntExtra(SEEKPOSITION, -1));
         } else if (intent.getBooleanExtra(GET_INFO, false)) {
             sendInfo();
         }
+
 
         return Service.START_STICKY;
     }
@@ -147,11 +149,16 @@ public class MyMediaPlayerService extends Service {
         isRunning = false;
     }
 
+    public  void cancelNotifcation() {
+        NotificationManager notificationManager =
+                (NotificationManager)this.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(classID);
+    }
 
     @SuppressLint("NewApi")
     public void createNotifcation() {
 
-        if (1 == 1) {//TODO Remove
+        if (1 == 2) {//TODO Remove
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -171,6 +178,85 @@ public class MyMediaPlayerService extends Service {
 
             startForeground(classID, notification);
         }
+
+
+        PendingIntent coverIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+
+        PendingIntent playIntent = getPendingIntent(this,MyMediaPlayerService.START_PAUSE);
+
+        PendingIntent nextIntent = getPendingIntent(this,MyMediaPlayerService.START_PLAYNEXT);
+
+        PendingIntent prevIntent = getPendingIntent(this,MyMediaPlayerService.START_PLAYPREV);
+
+        PendingIntent closeIntent = getPendingIntent(this,MyMediaPlayerService.START_STOP);
+
+        /* Construct the remote view to pass as the notification content. */
+
+        RemoteViews v = new RemoteViews(this.getPackageName(), R.layout.notification_player);
+
+        v.setOnClickPendingIntent(R.id.cover, coverIntent);
+        v.setOnClickPendingIntent(R.id.previous, prevIntent);
+        v.setOnClickPendingIntent(R.id.play, playIntent);
+        v.setOnClickPendingIntent(R.id.next, nextIntent);
+        v.setOnClickPendingIntent(R.id.close, closeIntent);
+
+        /*
+         * Finally, build and post the notification. Note that we mark it as an
+         * ongoing event.
+         */
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setContent(v);
+        builder.setSmallIcon(R.drawable.ic_launcher);
+        // notification.bigContentView = v;
+
+        final Notification notification = builder.build();
+
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+
+        Log.e("Notification", "createNotifcation---------------------------------");
+
+        servicePlayController.activeSong.getIconCallback(new DownloadImageTask.DownloadCallback() {
+            @Override
+            public void callback(Bitmap result) {
+                Log.e("RESULT bbbbbb", "ddsdfsdfsdf " + Boolean.toString((result != null)));
+                if (result != null)
+                    notification.contentView.setImageViewBitmap(R.id.cover, result);
+                else
+                    notification.contentView.setImageViewResource(R.id.cover, R.drawable.ic_launcher);
+
+
+                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(
+                        getApplicationContext().NOTIFICATION_SERVICE);
+
+
+                notificationManager.notify(classID, notification);
+            }
+        });
+
+        notification.contentView.setImageViewResource(R.id.cover, R.drawable.ic_launcher);
+
+        notification.contentView.setTextViewText(R.id.caption, servicePlayController.activeSong.getDisplayName());
+
+        startForeground(classID, notification);
+
+
+    }
+
+    private  PendingIntent getPendingIntent(Context context, String extra) {
+        Intent intent = new Intent(this, MyMediaPlayerService.class);
+        intent.putExtra(extra, true);
+        intent.setAction(extra);
+        /*
+         * Without FLAG_UPDATE_CURRENT, extras are not sent. Additionally,
+         * setAction() is required to make filterEquals() return false;
+         * otherwise the same extra is delivered on each intent.
+         */
+
+        return PendingIntent.getService(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public void sendInfo() {
@@ -189,6 +275,18 @@ public class MyMediaPlayerService extends Service {
 
         data.putInt("DURATIONVALUE", duration);
         sendMessage(ServiceMessageHandler.MESSAGETYPE_DURATION, data);
+
+
+    }
+
+    public void sendUpdatedPlayedSongs(String songsJSON) {
+
+        if (MainActivity.instance != null && MainActivity.instance.loaded) {
+            Bundle data = new Bundle();
+            data.putString("SONGS", songsJSON);
+            sendMessage(ServiceMessageHandler.MESSAGETYPE_PLAYEDSONGSUPDATE, data);
+
+        }
 
 
     }
@@ -250,6 +348,33 @@ public class MyMediaPlayerService extends Service {
             }
         }
     }
+
+
+    public void play() {
+        servicePlayController.play();
+    }
+
+    public void pause() {
+        servicePlayController.pause();
+    }
+
+    public void prev(Song song) {
+        if (servicePlayController.activeSong == null && song != null) {
+            servicePlayController.activeSong = song;
+            servicePlayController.getPlaylistSongs(song.getPlaylistGid(), false);
+        }
+
+        servicePlayController.playPrev();
+    }
+
+    public void next(Song song) {
+        if (servicePlayController.activeSong == null && song != null) {
+            servicePlayController.activeSong = song;
+            servicePlayController.getPlaylistSongs(song.getPlaylistGid(), false);
+        }
+        servicePlayController.playNext();
+    }
+
 
     private void playMp3NICHTVERWENDET(byte[] mp3SoundByteArray) {
 

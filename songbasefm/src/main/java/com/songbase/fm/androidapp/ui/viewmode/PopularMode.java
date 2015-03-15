@@ -3,9 +3,8 @@ package com.songbase.fm.androidapp.ui.viewmode;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.media.Playlist;
-import com.songbase.fm.androidapp.media.PlaylistListElement;
 import com.songbase.fm.androidapp.mymusic.MyMusicController;
-import com.songbase.fm.androidapp.playing.PlayController;
+import com.songbase.fm.androidapp.popular.PopularController;
 import com.songbase.fm.androidapp.ui.UIController;
 import com.songbase.fm.androidapp.ui.navigationbar.NavigationBar;
 
@@ -13,37 +12,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Manfred on 09.03.2015.
+ * Created by Manfred on 14.03.2015.
  */
+public class PopularMode extends ViewMode {
 
-public class CurrentPlaylistMode extends ViewMode {
+
+    private PopularController popularController;
 
     List<MainListElement> list = new ArrayList<MainListElement>();
 
-    public CurrentPlaylistMode() {
-        super.id = UIController.CURRENTPLAYLISTMODE;
+
+    public PopularMode() {
+        super.id = UIController.POPULARMODE;
     }
 
+    public void init() {
+        popularController = new PopularController(list);
+    }
 
     public void activate() {
 
-        list = new ArrayList<MainListElement>();
 
-        Playlist playlist = MainActivity.instance.playController.getActivePlaylist();
+    //    Playlist playlist = MainActivity.instance.playController.getActivePlaylist();
 
-        String playlistName;
+        popularController.getPopularSongs(false);
 
-        if (playlist != null) {
-            list = playlist.getList();
-            playlistName = playlist.getName();
-        } else
-            playlistName = "Current Playlist";
 
         MainActivity.instance.listController.setList(list);
 
         // Navigate to Explore
         UIController.instance.navigationBar.navigate(
-                NavigationBar.homeString, playlistName);
+                NavigationBar.homeString, "Popular Songs");
+
     }
 
     public void deactivate() {
@@ -52,5 +52,6 @@ public class CurrentPlaylistMode extends ViewMode {
                 NavigationBar.homeString, "");
 
     }
+
 
 }

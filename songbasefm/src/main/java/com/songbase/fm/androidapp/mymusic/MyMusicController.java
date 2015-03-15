@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.androidquery.AQuery;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.media.Playlist;
@@ -26,11 +27,16 @@ import com.songbase.fm.androidapp.media.SongAction;
 import com.songbase.fm.androidapp.media.SongListElement;
 import com.songbase.fm.androidapp.misc.Utils;
 import com.songbase.fm.androidapp.playing.PlayController;
+import com.songbase.fm.androidapp.ui.UIController;
+import com.songbase.fm.androidapp.ui.viewmode.MyMusicMode;
 
 public class MyMusicController {
 
 
     public List<MainListElement> list = new ArrayList<MainListElement>();
+
+    public List<MainListElement> defaultListElements = new ArrayList<MainListElement>();
+
 
     public static MyMusicController instance;
 
@@ -39,11 +45,16 @@ public class MyMusicController {
 
 
     public boolean isSubModeActive = false;
-    public String activePlaylistGid;
+
+    public Playlist loadedPlaylist;//displayed Playlist if submode is active
 
     public static long counterGlobalId = 0;
 
     public static String allSongsPlaylistGid = "id_0";
+    public static String playedSongsPlaylistGid = "id_1";
+    public static String popularSongsPlaylistGid = "id_2";
+
+    public Playlist playedSongsPlaylist;
 
 
     public MyMusicController(List<MainListElement> list) {
@@ -51,31 +62,31 @@ public class MyMusicController {
         this.list = list;
         aQuery = MainActivity.instance.aQuery;
 
-
+        playedSongsPlaylist = new Playlist("Played Songs", MyMusicController.playedSongsPlaylistGid, new ArrayList<MainListElement>());
+        this.defaultListElements.add(new PlaylistListElement(playedSongsPlaylist,
+                new PlaylistAction(playedSongsPlaylist)));
     }
 
 
     public void setPlaylistList(List<PlaylistListElement> list) {
 
         this.list.clear();
-        this.list.addAll(list);
 
+        this.list.addAll(list);
+        this.list.addAll(1, this.defaultListElements);
+
+        //Set active Playlist after Paylists got loaded
         if (PlayController.instance.activeSong != null)
             PlayController.instance.setActivePlaylistByGid(PlayController.instance.activeSong.getPlaylistGid());
 
-
-        Log.e("..c", Integer.toString(list.size()));
-
-
+        if (UIController.instance.isModeActive(UIController.MYMUSICMODE))
+            MainActivity.instance.listController.refreshList();
     }
 
 
     public String getPlaylistsAsJSON() {
 
-
         String playlistsJSON = "{\"items\": [";
-
-        Log.e("..", Integer.toString(list.size()));
 
         for (MainListElement playlistElement : list) {
 
@@ -83,27 +94,16 @@ public class MyMusicController {
 
             if (!playlist.getGid().equals(MyMusicController.allSongsPlaylistGid)) {
 
-                String playlistJSON = "{ \"name\": \"" + playlist.getName() + "\",\"gid\": \"" + playlist.getGid() + "\",\"data\": [";
+                String playlistJSON = "{ \"name\": \"" + playlist.getName() + "\",\"gid\": \"" + playlist.getGid() + "\",\"data\": ";
 
-                String songsJSON = "";
                 List<MainListElement> playlistSongs = playlist.getList();
 
-                for (MainListElement songElement : playlistSongs) {
-                    Song song = ((SongListElement) songElement).getSong();
-                    songsJSON = songsJSON + gson.toJson(song);
-                    if (playlistSongs.indexOf(songElement) < playlistSongs.size() - 1)
-                        songsJSON = songsJSON + ",";
-                }
-
-                //Insert songs into playlist
-                playlistJSON = playlistJSON + songsJSON;
-                playlistJSON = playlistJSON + "]}";
+                playlistJSON = playlistJSON + getSongsAsJSON(playlistSongs)+"}";
 
                 //insert Playlist into Playlist list
                 playlistsJSON = playlistsJSON + playlistJSON;
                 if (list.indexOf(playlistElement) < list.size() - 1)
                     playlistsJSON = playlistsJSON + ",";
-
 
             }
 
@@ -115,7 +115,30 @@ public class MyMusicController {
     }
 
 
-    public static List<PlaylistListElement> parsePlaylistJSON(JSONObject json) {
+    public String getSongsAsJSON( List<MainListElement> playlistSongs){
+
+        String playlistJSON ="[";
+
+        String songsJSON = "";
+        for (MainListElement songElement : playlistSongs) {
+            Song song = ((SongListElement) songElement).getSong();
+            songsJSON = songsJSON + gson.toJson(song);
+            if (playlistSongs.indexOf(songElement) < playlistSongs.size() - 1)
+                songsJSON = songsJSON + ",";
+        }
+
+        //Insert songs into playlist
+        playlistJSON = playlistJSON + songsJSON;
+
+        playlistJSON = playlistJSON + "]";
+
+        return playlistJSON;
+    }
+
+
+
+
+    public static List<PlaylistListElement> getPlaylistsFromJSON(JSONObject json) {
         List<PlaylistListElement> list = new ArrayList<PlaylistListElement>();
         List<MainListElement> allSongs = new ArrayList<MainListElement>();
 
@@ -130,68 +153,24 @@ public class MyMusicController {
                     JSONObject playlistJSON = playlistMatches.getJSONObject(i);
 
                     JSONArray playlistSongs = playlistJSON.getJSONArray("data");
+
                     List<MainListElement> songs = new ArrayList<MainListElement>();
 
-                    for (int j = 0; j < playlistSongs.length(); j++) {
-                        JSONObject trackJSON = playlistSongs.getJSONObject(j);
+                    List<Song> songList = MyMusicController.getSongsFromJSON(playlistSongs.toString());
 
-                        String artist;
-                        try {
-                            JSONObject artistJSON = trackJSON
-                                    .getJSONObject("artist");
-                            artist = artistJSON.getString("name");
-                        } catch (JSONException e) {
-                            artist = trackJSON.getString("artist");
-                        }
+                    for (Song song : songList) {
+                        songs.add(new SongListElement(song,
+                                new SongAction(song)));
 
-                        boolean isBuffered;
-                        try {
-                            isBuffered = trackJSON.getBoolean("isBuffered");
-                        } catch (JSONException e) {
-                            isBuffered = false;
-                        }
-                        boolean isConverted;
-                        try {
-                            isConverted = trackJSON.getBoolean("isConverted");
-                        } catch (JSONException e) {
-                            isConverted = false;//TODO
-                        }
+                        //Add Song to All Songs Playlist
+                        Song copySong = new Song(song);
+                        copySong.playlistgid = MyMusicController.allSongsPlaylistGid;
+                        copySong.album = playlistJSON.getString("name");
 
-
-                        Song track = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
-                                artist, trackJSON.getString("playlistgid"));
-
-                        songs.add(new SongListElement(track, new SongAction(
-                                track)));
-
-
-
-
-                        //Add to all songs Playlist
-                        Song trackAll = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
-                                artist, MyMusicController.allSongsPlaylistGid);
-
-
-                        trackAll.album = playlistJSON.getString("name");
-
-                        allSongs.add(new SongListElement(trackAll, new SongAction(
-                                trackAll)));
-
-
-                        try {
-                            String image =  ((JSONObject)trackJSON.getJSONArray("image").get(2)).getString("#text");
-                            List<Song> songsIcon = new ArrayList<Song>();
-                            songsIcon.add(trackAll);
-                            songsIcon.add(track);
-
-                            Song.loadIcon(image,songsIcon);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
+                        allSongs.add(new SongListElement(copySong,
+                                new SongAction(copySong)));
                     }
+
 
                     Playlist playlist = new Playlist(
                             playlistJSON.getString("name"), playlistJSON.getString("gid"), songs);
@@ -207,11 +186,83 @@ public class MyMusicController {
 
         }
 
+
         Playlist playlist = new Playlist("All Songs", MyMusicController.allSongsPlaylistGid, allSongs);
-        list.add(0, new PlaylistListElement(playlist,
-                new PlaylistAction(playlist)));
+        list.add(0, new PlaylistListElement(playlist, new PlaylistAction(playlist)));
 
         return list;
+    }
+
+
+    public static Song getSongFromJSON(String songJSON) {
+
+
+        try {
+
+            JSONObject trackJSON = new JSONObject(songJSON);
+
+            String artist;
+            try {
+                JSONObject artistJSON = trackJSON
+                        .getJSONObject("artist");
+                artist = artistJSON.getString("name");
+            } catch (JSONException e) {
+                artist = trackJSON.getString("artist");
+            }
+
+            boolean isBuffered = trackJSON.has("isBuffered") && trackJSON.getBoolean("isBuffered");
+            boolean isConverted = trackJSON.has("isConverted") && trackJSON.getBoolean("isConverted");
+
+            String songGid;
+            if (trackJSON.has("gid")) {
+                songGid = trackJSON.getString("gid");
+            } else {
+                songGid = MyMusicController.getNewID();
+            }
+
+            String playlistGid;
+            if (trackJSON.has("playlistgid")) {
+                playlistGid = trackJSON.getString("playlistgid");
+            } else {
+                playlistGid = MyMusicController.playedSongsPlaylistGid;
+            }
+
+            Song song = new Song(songGid, trackJSON.getString("name"), isBuffered, isConverted,
+                    artist, playlistGid);
+
+
+
+            if (trackJSON.has("image"))
+                song.imageURLJSON = trackJSON.getJSONArray("image").toString();
+            else if (trackJSON.has("imageURLJSON"))
+                song.imageURLJSON = trackJSON.getString("imageURLJSON");
+
+            return song;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static List<Song> getSongsFromJSON(String songsJSON) {
+
+        List<Song> songs = new ArrayList<Song>();
+
+        if (songsJSON != null && !songsJSON.equals("")) {
+
+            ArrayList<LinkedTreeMap> oldPlayedSongs = new ArrayList<LinkedTreeMap>();
+            oldPlayedSongs = (ArrayList<LinkedTreeMap>) gson.fromJson(songsJSON, oldPlayedSongs.getClass());
+            for (int j = 0; j < oldPlayedSongs.size(); j++) {
+                LinkedTreeMap songTreeMap = oldPlayedSongs.get(j);
+                Song song = getSongFromJSON(gson.toJson(songTreeMap));
+                if (song != null)
+                    songs.add(song);
+            }
+
+        }
+        return songs;
     }
 
     public static String getMD5(String input) {
@@ -241,5 +292,25 @@ public class MyMusicController {
 
         return "id_" + id;
     }
+
+    public void setPlayedSongs(List<MainListElement> songs) {
+
+        List<MainListElement> oldSongs = playedSongsPlaylist.getList();
+
+        oldSongs.clear();
+        oldSongs.addAll(songs);
+
+        //Reload Played songs playlist
+        if (UIController.instance.isModeActive(UIController.MYMUSICMODE)) {
+            if (MyMusicController.instance.isSubModeActive) {
+                if (loadedPlaylist != null && loadedPlaylist.equals(playedSongsPlaylistGid)) {
+                    MainActivity.instance.listController.refreshList();
+
+                }
+            }
+        }
+
+    }
+
 
 }

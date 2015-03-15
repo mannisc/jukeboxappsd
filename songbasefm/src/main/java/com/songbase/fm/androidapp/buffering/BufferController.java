@@ -172,11 +172,10 @@ public class BufferController {
         String titleString = song.getName();
         final String searchString = song.getDisplayName();
 
-        String url;
-        url = Settings.serverURL + "?play=" + URLEncoder.encode(searchString)
-                + "&force1=" + URLEncoder.encode(artistString) + "&force2="
-                + URLEncoder.encode(titleString)
-                + "&duration=&fromCache=1&auth=" + AuthController.ip_token;
+        String url = Utils.getEncodedUrl(Settings.serverURL + "?play=" + searchString
+                + "&force1=" + artistString + "&force2="
+                + titleString
+                + "&duration=&fromCache=1&auth=" + AuthController.ip_token);
 
         Log.e("XXX", url);
 
@@ -186,14 +185,9 @@ public class BufferController {
             public void callback(String url, JSONObject json, AjaxStatus status) {
 
                 // status.getCode()
-                Log.e("????X", url);
-                Log.e("STATUS", status.toString());
+                Log.e("loadSongCallback", url+" "+status.toString());
 
-                Log.e("????", ((Boolean) (json == null)).toString());
-
-                Log.e("XXX",
-                        "----------------------------------------------------");
-
+                /*
                 String jsonSTRING = "{\"streamURL\":\"http://h2406563.stratoserver.net/mustang.mp4\",\"videoURL\":\"http://www.dailymotion.com/video/x7c8og_rammstein-moskau_music\"}";
 
                 Log.e("XXX", jsonSTRING);
@@ -205,19 +199,19 @@ public class BufferController {
                             "Error:" + status.getCode(), Toast.LENGTH_LONG)
                             .show();
                     e.printStackTrace();
-                }
+                }*/
 
                 if (json != null) {
-                    Log.e("XXX", json.toString());
+                    Log.e("loadSongCallback response", json.toString());
 
                     try {
                         String streamUrl = json.getString("streamURL");
                         String videoUrl = json.getString("videoURL");
 
-                        Log.e("XXX videoURL", streamUrl);
+                        Log.e("loadSongCallback streamUrl", streamUrl);
+                        Log.e("loadSongCallback videoURL", videoUrl);
 
                         song.setVideoUrl(videoUrl);
-                        Log.e("XXX videoURL", videoUrl);
 
                         if (callback != null)
                             callback.callback(streamUrl, videoUrl);

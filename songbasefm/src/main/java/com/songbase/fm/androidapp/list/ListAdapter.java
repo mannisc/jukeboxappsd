@@ -98,23 +98,24 @@ public class ListAdapter extends ArrayAdapter<MainListElement> implements
 
                 holder.infoView = infoView;
 
+
+                holder.imageViewBack = (ImageView) convertView
+                        .findViewById(R.id.imglistback);
+
+
             } else {
                 convertView = inflater.inflate(R.layout.namerowlayout, null);
-
+                holder.imageViewBack = null;
             }
 
-            ImageView imageView = (ImageView) convertView
+
+            holder.imageView = (ImageView) convertView
                     .findViewById(R.id.imglist);
 
-            holder.imageView = imageView;
 
-            ImageView imageViewTop = (ImageView) convertView
+
+            holder.imageViewTop = (ImageView) convertView
                     .findViewById(R.id.imglisttop);
-
-            holder.imageView = imageView;
-            holder.imageViewTop = imageViewTop;
-
-
             TextView nameView = (TextView) convertView
                     .findViewById(R.id.namelist);
 
@@ -130,10 +131,21 @@ public class ListAdapter extends ArrayAdapter<MainListElement> implements
 
         parent.setBackgroundColor(Color.TRANSPARENT);
 
+        float alpha = (float) (listElement.getIconAlpha()) / 255f;
+
+        if (holder.imageViewBack != null) {
+            if (alpha < 1)
+                holder.imageViewBack.setAlpha(1.0f);
+            else
+                holder.imageViewBack.setAlpha(0.0f);
+        }
+
+
         holder.imageView.setImageDrawable(listElement.getIcon());
-        holder.imageView.setAlpha((float)(listElement.getIconAlpha())/255f);
+        holder.imageView.setAlpha(alpha);
 
         Drawable drawableTop = listElement.getIconTop();
+
         holder.imageViewTop.setImageDrawable(drawableTop);
 
 
@@ -146,12 +158,14 @@ public class ListAdapter extends ArrayAdapter<MainListElement> implements
     }
 
 	/* *********************************
-	 * We use the holder pattern It makes the view faster and avoid finding the
+     * We use the holder pattern It makes the view faster and avoid finding the
 	 * component *********************************
 	 */
 
     private static class ListHolder {
         public boolean infoLayout;
+        public ImageView imageViewBack;
+
         public ImageView imageView;
         public ImageView imageViewTop;
         public TextView nameView;

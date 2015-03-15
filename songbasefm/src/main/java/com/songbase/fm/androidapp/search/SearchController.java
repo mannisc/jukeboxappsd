@@ -18,6 +18,7 @@ import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.media.Song;
 import com.songbase.fm.androidapp.media.SongAction;
 import com.songbase.fm.androidapp.media.SongListElement;
+import com.songbase.fm.androidapp.mymusic.MyMusicController;
 import com.songbase.fm.androidapp.ui.UIController;
 
 public class SearchController {
@@ -71,28 +72,14 @@ public class SearchController {
                                             .getJSONObject("results")
                                             .getJSONObject("trackmatches")
                                             .getJSONArray("track");
-                                    for (int i = 0; i < trackmatches.length(); i++) {
-                                        JSONObject trackJSON = trackmatches
-                                                .getJSONObject(i);
-                                        Song song = new Song(trackJSON.getString("name"),
-                                                trackJSON.getString("artist"));
 
+                                    List<Song> songList = MyMusicController.getSongsFromJSON(trackmatches.toString());
 
-
-                                        try {
-                                            String image =  ((JSONObject)trackJSON.getJSONArray("image").get(2)).getString("#text");
-                                            List<Song> songsIcon = new ArrayList<Song>();
-                                            songsIcon.add(song);
-                                            Song.loadIcon(image,songsIcon);
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-
-
+                                    for (Song song : songList) {
                                         list.add(new SongListElement(song,
                                                 new SongAction(song)));
                                     }
+
                                     // Set list
                                     MainActivity.instance.listController.setList(list);
                                 }

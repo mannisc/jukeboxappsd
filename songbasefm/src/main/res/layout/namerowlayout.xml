@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginRight="30dip"
-    android:background="@drawable/listitem_background">
+    android:background="@drawable/listitem_background"
+    android:paddingRight="5dp">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/imglistparent"
@@ -13,15 +14,15 @@
 
         <ImageView
             android:id="@+id/imglist"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleType="fitCenter"
             android:src="@drawable/playlist" />
 
         <ImageView
             android:id="@+id/imglisttop"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleType="fitCenter" />
 
     </FrameLayout>
@@ -36,8 +37,8 @@
         android:layout_toRightOf="@id/imglistparent"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="dfdf"
-        android:textSize="23sp" />
+        android:text=""
+        android:textSize="20sp" />
 
 
 </RelativeLayout>

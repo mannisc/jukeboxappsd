@@ -19,6 +19,8 @@ public class PlaylistAction implements Action {
 
 		MyMusicController.instance.isSubModeActive = true;
 
+        MyMusicController.instance.loadedPlaylist = this.playlist;
+
 		MainActivity.instance.listController.setList(this.playlist.getList());
 
 		UIController.instance.navigationBar.navigate(NavigationBar.homeString,

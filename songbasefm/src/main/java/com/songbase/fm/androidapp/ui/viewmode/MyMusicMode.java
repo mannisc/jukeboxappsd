@@ -38,6 +38,7 @@ public class MyMusicMode extends ViewMode {
 		UIController.instance.navigationBar.navigate(
 				NavigationBar.homeString, "");
 
+        myMusicController.isSubModeActive = false;
 	}
 
 	public boolean isSubModeActive() {

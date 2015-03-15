@@ -2,7 +2,6 @@ package com.songbase.fm.androidapp.account;
 
 import java.util.List;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -16,6 +15,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.authentication.AuthController;
 import com.songbase.fm.androidapp.authentication.RSAUtils;
+import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.media.PlaylistListElement;
 import com.songbase.fm.androidapp.mymusic.MyMusicController;
 import com.songbase.fm.androidapp.persistence.PersistenceController;
@@ -47,16 +47,10 @@ public class AccountController {
 
             @Override
             public void callback(String url, String string, AjaxStatus status) {
-                Log.e("AUTO LOGIN ?", string);
-
-                Log.e("AUTO LOGIN ?", Boolean.toString(string==null));
-                Log.e("AUTO LOGIN ?",status.toString());
 
                 if (string != null&&string.contains("\"auth\":\"true\"")) {
-
                     mAuthTask = new UserAutoLoginTask(AuthController.loginToken);
                     mAuthTask.execute((Void) null);
-
                 //Auto login failed
                 }else{
                     Settings.setIsLoggedIn(false);
@@ -142,10 +136,15 @@ public class AccountController {
                     + "&auth=" + AuthController.ip_token;
 
             AjaxCallback<String> cb = new AjaxCallback<String>();
+
+
+
             cb.url(url).type(String.class);
             cb = cb.encoding("UTF-16LE");//
             cb.header("Referer", "songbase.fm");
             // US-ASCII,windows-1252
+
+            Log.e("LOGIN",url);
 
             aQuery.sync(cb);
             String response = cb.getResult();
@@ -180,18 +179,12 @@ public class AccountController {
         String url = Settings.serverURL + "?getdatalist=" + savetoken + "&n="
                 + nonce + "&type=playlist&auth=" + AuthController.ip_token;
 
-        Log.e("loadStoredOnlineData", AuthController.loginToken);
-        Log.e("loadStoredOnlineData", ((Long) nonce).toString());
-        Log.e("loadStoredOnlineData", url);
+        Log.d("loadStoredOnlineData",url);//TODO remove
 
         AjaxCallback<JSONObject> cb = new AjaxCallback<JSONObject>() {
 
             @Override
             public void callback(String url, JSONObject json, AjaxStatus status) {
-
-                Log.e("DDDDDD", ((Integer) status.getCode()).toString());
-
-                Log.e("DDDDDD", json.toString());
 
                 /**
                  * TODO REMOVE
@@ -212,9 +205,13 @@ public class AccountController {
                  */
                 if (json != null) {
 
-                    List<PlaylistListElement> list = MyMusicController.parsePlaylistJSON(json);
+                    Log.e("Playlists:",json.toString());
+                    List<PlaylistListElement> list = MyMusicController.getPlaylistsFromJSON(json);
 
                     MyMusicController.instance.setPlaylistList(list);
+
+                    List<MainListElement> songs = PersistenceController.instance.loadPlayedSong();
+                    MyMusicController.instance.setPlayedSongs(songs);
 
                     PersistenceController.instance.saveOfflineData();
 

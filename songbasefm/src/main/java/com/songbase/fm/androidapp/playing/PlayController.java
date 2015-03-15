@@ -39,6 +39,7 @@ import com.songbase.fm.androidapp.mymusic.MyMusicController;
 import com.songbase.fm.androidapp.persistence.PersistenceController;
 import com.songbase.fm.androidapp.playing.service.MyMediaPlayerService;
 import com.songbase.fm.androidapp.playing.service.ServiceMessageHandler;
+import com.songbase.fm.androidapp.popular.PopularController;
 import com.songbase.fm.androidapp.ui.UIController;
 import com.songbase.fm.androidapp.ui.viewmode.MainMode;
 
@@ -94,7 +95,6 @@ public class PlayController {
 
         coverImage = (ImageView) MainActivity.instance.findViewById(R.id.coverImage);
 
-
         infoText = (TextView) MainActivity.instance.findViewById(R.id.infoText);
 
         infoText.setSelected(true);
@@ -117,7 +117,6 @@ public class PlayController {
 
 
         songProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
 
 
             @Override
@@ -160,11 +159,12 @@ public class PlayController {
 
     public void setPlayingSongInfo(Song song) {
 
-
         // TODO if(activeSong!=null)
         Log.e("XXX Activity", "Set  Play Song Info");
 
         activeSong = song;
+
+        activeSong.getIcon();//Trigger icon load
 
         setActivePlaylistByGid(song.getPlaylistGid());
 
@@ -244,7 +244,6 @@ public class PlayController {
     }
 
 
-
     private class LoadingCallback implements CustomCallback {
         @Override
         public void callbackString(String returnString) {
@@ -271,22 +270,22 @@ public class PlayController {
             updateDurationText("");
 
             setPlayingSongInfo(song);
+            onPlay();
+
+
             startSongInService();
 
-            onPlay();
         }
 
     }
 
     public void onPlay() {
 
-
         MainActivity.instance.listController.refreshList();
 
         //Set Cover Image
         if (activeSong.getIcon() != null)
-            coverImage.setImageDrawable(activeSong.getIcon());
-
+            updateSongCover();
 
         if (isPlaying) {
             //Change Layout
@@ -305,7 +304,7 @@ public class PlayController {
 
                 @Override
                 public void run() {
-                    while (isPlaying && !MainActivity.instance.destroyed) {
+                    while (isPlaying && MainActivity.instance != null && !MainActivity.instance.destroyed) {
                         try {
                             playUpdateHandler.post(new Runnable() {
 
@@ -503,6 +502,14 @@ public class PlayController {
     }
 
 
+    public void onPlayedSongsUpdate(String songsJSON) {
+
+        List<MainListElement> songs = PersistenceController.instance.loadPlayedSong(songsJSON);
+        MyMusicController.instance.setPlayedSongs(songs);
+
+    }
+
+
     public synchronized void onDurationChanged(int duration) {
 
 
@@ -677,7 +684,8 @@ public class PlayController {
         String activeSongString = data.getString("activeSong", "");
 
         if (!activeSongString.equals("")) {
-            Song lastActiveSong = gson.fromJson(activeSongString, Song.class);
+
+            Song lastActiveSong = MyMusicController.getSongFromJSON(activeSongString);
 
             setPlayingSongInfo(lastActiveSong);
 
@@ -687,15 +695,15 @@ public class PlayController {
     }
 
     public boolean isPlayingSong(Song song) {
-        return song.getPlaylistGid().equals(MainActivity.instance.playController.activePlaylistGid)&&song.gid.equals(MainActivity.instance.playController.activeSong.gid);
+        return (song.getPlaylistGid().equals(MainActivity.instance.playController.activePlaylistGid) || MyMusicController.playedSongsPlaylistGid.equals(MainActivity.instance.playController.activePlaylistGid) || MyMusicController.playedSongsPlaylistGid.equals(song.getPlaylistGid())) && song.gid.equals(MainActivity.instance.playController.activeSong.gid);
     }
 
     public Song getSongFromSongGid(String songGid) {
 
-        if(activePlaylist!=null){
-            for (MainListElement  songElement  : activePlaylist.getList()) {
-                Song song = ((SongListElement)songElement).getSong();
-                if(song.gid.equals(songGid))
+        if (activePlaylist != null) {
+            for (MainListElement songElement : activePlaylist.getList()) {
+                Song song = ((SongListElement) songElement).getSong();
+                if (song.gid.equals(songGid))
                     return song;
             }
         }
@@ -704,13 +712,17 @@ public class PlayController {
     }
 
 
-
     public Playlist getPlaylistFromPlaylistGid(String playlistGid) {
-        for (MainListElement playlistElement : MyMusicController.instance.list) {
-            PlaylistListElement playlistListElement = (PlaylistListElement) playlistElement;
-            Playlist playlist = playlistListElement.getPlaylist();
-            if (playlist.getGid().equals(playlistGid)) {
-                return playlist;
+
+        if (playlistGid.equals(MyMusicController.popularSongsPlaylistGid))
+            return PopularController.instance.getPlaylist();
+        else {
+            for (MainListElement playlistElement : MyMusicController.instance.list) {
+                PlaylistListElement playlistListElement = (PlaylistListElement) playlistElement;
+                Playlist playlist = playlistListElement.getPlaylist();
+                if (playlist.getGid().equals(playlistGid)) {
+                    return playlist;
+                }
             }
         }
         return null;
@@ -718,12 +730,14 @@ public class PlayController {
 
     public void setActivePlaylistByGid(String playlistGid) {
         activePlaylist = getPlaylistFromPlaylistGid(playlistGid);
+
         if (activePlaylist != null) {
             activePlaylistGid = playlistGid;
 
             OptionListElement currentPlaylistElement = ((MainMode) (UIController.viewModes[UIController.MAINMODE]).mode).currentPlaylistElement;
             currentPlaylistElement.info = activePlaylist.getName();
             currentPlaylistElement.listLayout = ListAdapter.ListLayout.NAMEINFO;
+            MainActivity.instance.listController.refreshList();
 
         }
     }
@@ -731,6 +745,12 @@ public class PlayController {
 
     public Playlist getActivePlaylist() {
         return activePlaylist;
+    }
+
+
+    public void updateSongCover() {
+        coverImage.setImageDrawable(activeSong.getIcon());
+
     }
 
 

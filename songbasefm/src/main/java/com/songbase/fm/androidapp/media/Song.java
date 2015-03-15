@@ -4,15 +4,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.songbase.fm.androidapp.MainActivity;
-import com.songbase.fm.androidapp.R;
 import com.songbase.fm.androidapp.list.ListAdapter;
 import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.misc.DownloadImageTask;
+import com.songbase.fm.androidapp.misc.Utils;
 import com.songbase.fm.androidapp.mymusic.MyMusicController;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +41,21 @@ public class Song extends MainListElement {
     // Resource
     private String videoURL;
 
-    private transient Drawable icon;
+    public String imageURLJSON = null;
+
+    public transient boolean loadingIcon = false;
+    private transient Drawable icon = null;
+    private transient static Drawable defaultIcon;
 
     public ListAdapter.ListLayout getListLayout() {
         return ListAdapter.ListLayout.NAMEINFO;
+    }
+
+    public Song(Song song) {
+        this(song.gid, song.name, song.isBuffered, song.isConverted, song.artist, song.playlistgid);
+        imageURLJSON = song.imageURLJSON;
+        videoURL = song.videoURL;
+        icon = song.icon;
     }
 
 
@@ -51,26 +66,20 @@ public class Song extends MainListElement {
         this.isConverted = isConverted;
         this.isBuffered = isBuffered;
         this.playlistgid = playlistgid;
-
-
         this.videoURL = null;
-
-
-        int imageResource = MainActivity.instance.getResources().getIdentifier(
-                "music", "drawable", MainActivity.instance.getPackageName());
-        this.icon =  new BitmapDrawable(MainActivity.instance.getResources(),BitmapFactory.decodeResource(
-                MainActivity.instance.getResources(), imageResource));
+        this.icon = null;
     }
 
 
-
-    public static void loadIcon(String url, List<Song>  songs){
-
-        Log.e("URL",url);
-        new DownloadImageTask(songs)
+    public static void loadIconCallback(String url, List<Song> songs, DownloadImageTask.DownloadCallback callback) {
+        new DownloadImageTask(callback, songs)
                 .execute(url);
     }
 
+    public static void loadIcon(String url, List<Song> songs) {
+        new DownloadImageTask(songs)
+                .execute(url);
+    }
 
 
     public Song(String name, String artist) {
@@ -82,11 +91,71 @@ public class Song extends MainListElement {
     }
 
     public void setIcon(Bitmap icon) {
-        this.icon =  new BitmapDrawable(MainActivity.instance.getResources(),icon);
+        this.icon = new BitmapDrawable(MainActivity.instance.getResources(), icon);
     }
+
+    public Drawable getIconCallback(final DownloadImageTask.DownloadCallback callback) {
+
+        if (icon == null) {
+
+            //Load Song Cover
+
+
+            Log.e("SONG.imageURLJSON", Boolean.toString(this.imageURLJSON != null) + "  " + ((this.imageURLJSON != null) ? this.imageURLJSON : ""));
+
+
+            if (this.imageURLJSON != null && !loadingIcon) {
+                if (Utils.getDownloadDataLimitation() == 2) {
+
+                    loadingIcon = true;
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                String iconURL = ((JSONObject) new JSONArray(Song.this.imageURLJSON).get(1)).getString("#text");
+
+                                if (iconURL != null) {
+                                    List<Song> songsIcon = new ArrayList<Song>();
+                                    songsIcon.add(Song.this);
+                                    if (callback == null)
+                                        Song.loadIcon(iconURL, songsIcon);
+                                    else
+                                        Song.loadIconCallback(iconURL, songsIcon, callback);
+
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 150);
+
+                }
+            }
+
+            if (Song.defaultIcon == null) {
+                int imageResource = MainActivity.instance.getResources().getIdentifier(
+                        "music", "drawable", MainActivity.instance.getPackageName());
+                Song.defaultIcon = new BitmapDrawable(MainActivity.instance.getResources(), BitmapFactory.decodeResource(
+                        MainActivity.instance.getResources(), imageResource));
+
+            }
+            return Song.defaultIcon;
+        } else {
+            if (callback != null)
+                callback.callback(((BitmapDrawable) (this.icon)).getBitmap());
+
+            return this.icon;
+        }
+    }
+
+
     public Drawable getIcon() {
-        return this.icon;
+        return getIconCallback(null);
     }
+
 
     public String getName() {
         return name;
@@ -106,7 +175,7 @@ public class Song extends MainListElement {
      */
     public String getInfo() {
         if (!artist.equals("")) {
-            if (album!=null&&!album.equals(""))
+            if (album != null && !album.equals(""))
                 return artist + " - " + album;
             else
                 return artist;

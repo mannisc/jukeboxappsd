@@ -44,7 +44,9 @@
         android:divider="@color/transparent"
         android:dividerHeight="4dp"
         android:focusable="false"
-        android:stackFromBottom="true" />
+        android:stackFromBottom="true"
+        android:fadingEdge="none"
+        />
 
     <com.songbase.fm.androidapp.ui.ClearableEditText
         android:id="@+id/searchText"
@@ -133,7 +135,7 @@
             android:adjustViewBounds="true"
             android:background="#ff323232"
             android:scaleType="fitCenter"
-            android:src="@drawable/cover" />
+            android:src="@drawable/music" />
 
         <View
             android:id="@+id/emptyleft"

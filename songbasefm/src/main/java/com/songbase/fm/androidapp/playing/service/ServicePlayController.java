@@ -1,42 +1,25 @@
 package com.songbase.fm.androidapp.playing.service;
 
-import android.app.Activity;
-import android.app.Service;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.WindowManager;
-import android.webkit.URLUtil;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
-import com.google.android.gms.games.Player;
 import com.google.gson.Gson;
-import com.songbase.fm.androidapp.MainActivity;
-import com.songbase.fm.androidapp.R;
 import com.songbase.fm.androidapp.authentication.AuthController;
 import com.songbase.fm.androidapp.list.MainListElement;
-import com.songbase.fm.androidapp.media.Playlist;
-import com.songbase.fm.androidapp.media.PlaylistAction;
-import com.songbase.fm.androidapp.media.PlaylistListElement;
 import com.songbase.fm.androidapp.media.Song;
 import com.songbase.fm.androidapp.media.SongAction;
 import com.songbase.fm.androidapp.media.SongListElement;
 import com.songbase.fm.androidapp.misc.CustomCallback;
 import com.songbase.fm.androidapp.misc.Utils;
 import com.songbase.fm.androidapp.mymusic.MyMusicController;
-import com.songbase.fm.androidapp.playing.PlayController;
 import com.songbase.fm.androidapp.settings.Settings;
 
 import org.json.JSONArray;
@@ -45,8 +28,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,12 +45,16 @@ public class ServicePlayController {
 
     public static final String PERSISTENCEDATA_NAME = "SongbaseData";
 
+
     public List<Song> playlist = new ArrayList<Song>();
+
+    public List<Song> playedSongs = new ArrayList<Song>();
+    public final int MAXPLAYEDSONGS = 30;
 
     public Song activeSong = null;
     public String activeURL = null;
 
-    public String activePlaylistGid;
+    public String activePlaylistGid="";
 
     public boolean isPlaying = false;
     public boolean isLoaded = false;
@@ -86,6 +71,7 @@ public class ServicePlayController {
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
 
+    AQuery aQuery;
 
     private Runnable updateRunnable = new Runnable() {
         @Override
@@ -108,11 +94,13 @@ public class ServicePlayController {
 
     public ServicePlayController(MyMediaPlayerService service, ServiceBufferController serviceBufferController) {
         instance = this;
+        aQuery = new AQuery(this.service);
 
         this.service = service;
 
         this.serviceBufferController = serviceBufferController;
 
+        loadPlayedSong();
 
     }
 
@@ -250,7 +238,6 @@ public class ServicePlayController {
                 .header("Origin", "songbase.fm/app")
                 .header("Host", "songbase.fm:3001");
 
-        AQuery aQuery = new AQuery(this.service);
         aQuery.ajax(url, JSONObject.class, -1, loadSongCallback);
 
     }
@@ -258,7 +245,7 @@ public class ServicePlayController {
     public void startPlayer(final Song song, final String songPath) {
         Log.e("LLL", "START PLAYER");
 
-        service.createNotifcation();
+
         initMediaPlayer();
         Thread player = new Thread(new Runnable() {
 
@@ -343,6 +330,8 @@ public class ServicePlayController {
         this.isLoaded = false;
         this.isPlaying = true;
 
+        service.createNotifcation();
+
 
         String newSongPath = null;
 
@@ -365,6 +354,9 @@ public class ServicePlayController {
         saveActiveSong();
 
         service.sendInfo();
+
+        savePlayedSong(song);
+
 
     }
 
@@ -451,7 +443,6 @@ public class ServicePlayController {
     public synchronized void playNext() {
 
 
-
         if (activeSong != null) {
 
 
@@ -530,6 +521,7 @@ public class ServicePlayController {
 
         SharedPreferences data = service.getApplicationContext().getSharedPreferences(PERSISTENCEDATA_NAME, 0);
         SharedPreferences.Editor editor = data.edit();
+        Log.e("saveActiveSong", gson.toJson(activeSong));
         editor.putString("activeSong", gson.toJson(activeSong));
         editor.putString("activePlaylistGid", gson.toJson(activePlaylistGid));
         editor.commit();
@@ -543,7 +535,32 @@ public class ServicePlayController {
         Log.e("getPlaylistSongs? 0", Boolean.toString(gid.equals("0")));
 
 
-        if (!gid.equals(activePlaylistGid) || forceUpdate) {
+        //Played Songs
+        if (gid.equals(MyMusicController.playedSongsPlaylistGid)) {
+            playlist.clear();
+            playlist.addAll(playedSongs);
+
+            //Popular Songs
+        } else if (gid.equals(MyMusicController.popularSongsPlaylistGid)) {
+
+            SharedPreferences data = service.getApplicationContext().getSharedPreferences(PERSISTENCEDATA_NAME, 0);
+            String songsJSON = data.getString("popularsongs", "");
+            if (!songsJSON.equals("")) {
+
+                List<Song> songList = MyMusicController.getSongsFromJSON(songsJSON);
+
+                Log.e("Songs", Integer.toString(songList.size()));
+
+                playlist.clear();
+                if (songList.size() > 100)
+                    playlist.addAll(songList.subList(0, 100));
+                else
+                    playlist.addAll(songList);
+
+                activePlaylistGid = gid;
+            }
+            //Normal Playlist
+        } else if (!gid.equals(activePlaylistGid) || forceUpdate) {
 
             List<Song> songs = new ArrayList<Song>();
 
@@ -568,30 +585,7 @@ public class ServicePlayController {
 
                         JSONArray playlistSongs = playlistJSON.getJSONArray("data");
 
-                        for (int j = 0; j < playlistSongs.length(); j++) {
-                            JSONObject trackJSON = playlistSongs.getJSONObject(j);
-
-                            String artist;
-                            try {
-                                JSONObject artistJSON = trackJSON
-                                        .getJSONObject("artist");
-                                artist = artistJSON.getString("name");
-                            } catch (JSONException e) {
-
-                                artist = trackJSON.getString("artist");
-
-                            }
-
-                            boolean isBuffered = trackJSON.getBoolean("isBuffered");
-                            boolean isConverted = trackJSON.getBoolean("isConverted");
-
-                            Song track = new Song(trackJSON.getString("gid"), trackJSON.getString("name"), isBuffered, isConverted,
-                                    artist, trackJSON.getString("playlistgid"));
-
-                            songs.add(track);
-
-                        }
-
+                        songs = MyMusicController.getSongsFromJSON(playlistSongs.toString());
 
                     }
 
@@ -607,6 +601,62 @@ public class ServicePlayController {
 
             Log.e("SONGS IN PLAYLIST", Integer.toString(playlist.size()));
         }
+
+    }
+
+    public void loadPlayedSong() {
+
+        SharedPreferences data = service.getApplicationContext().getSharedPreferences(PERSISTENCEDATA_NAME, 0);
+
+        String playedSongsJSON = data.getString("playedsongs", "");
+        if (!playedSongsJSON.equals("")) {
+            playedSongs = MyMusicController.getSongsFromJSON(playedSongsJSON);
+        }
+
+        Log.e("Loaded Playedsongs: ", Integer.toString(playedSongs.size()));
+
+    }
+
+    public void savePlayedSong(Song song) {
+
+        //Only update if playlist != played songs
+
+        if (!activePlaylistGid.equals(MyMusicController.playedSongsPlaylistGid)) {
+
+
+            SharedPreferences data = service.getApplicationContext().getSharedPreferences(PERSISTENCEDATA_NAME, 0);
+
+            //Clip songs
+            if (playedSongs.size() > MAXPLAYEDSONGS - 1)
+                playedSongs.subList(0, playedSongs.size() - MAXPLAYEDSONGS - 1 - 1).clear();
+
+            //Remove double Songs
+            for (int j = 0; j < playedSongs.size(); j++) {
+                Song playedSong = playedSongs.get(j);
+                if (playedSong.gid.equals(song.gid)) {
+                    playedSongs.remove(playedSong);
+                    j--;
+                }
+            }
+
+
+            Song playedSong = new Song(song);
+            playedSong.playlistgid = MyMusicController.playedSongsPlaylistGid;
+            playedSongs.add(playedSong);
+
+            String playedSongsJSON = gson.toJson(playedSongs);
+
+            Log.e("Playedsongs: ", playedSongsJSON);
+
+            SharedPreferences.Editor editor = data.edit();
+            editor.putString("playedsongs", playedSongsJSON);
+            editor.commit();
+
+            service.sendUpdatedPlayedSongs(playedSongsJSON);
+
+
+        }
+
     }
 
 }

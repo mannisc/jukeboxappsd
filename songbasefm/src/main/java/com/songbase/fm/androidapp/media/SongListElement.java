@@ -36,7 +36,7 @@ public class SongListElement extends MainListElement {
     @Override
     public int getIconAlpha() {
         if (MainActivity.instance.playController.isPlayingSong(song))
-            return 100;
+            return 180;
         else
             return 255;
 

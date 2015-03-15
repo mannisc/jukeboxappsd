@@ -1,5 +1,6 @@
 package com.songbase.fm.androidapp.misc;
 
+import android.app.Notification;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 
 import com.songbase.fm.androidapp.MainActivity;
 import com.songbase.fm.androidapp.media.Song;
+import com.songbase.fm.androidapp.playing.PlayController;
 
 import java.io.InputStream;
 import java.util.List;
@@ -17,10 +19,17 @@ import java.util.List;
  */
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    List<Song>  songs ;
+    List<Song> songs;
+    DownloadCallback callback = null;
 
     public DownloadImageTask(List<Song> songs) {
         this.songs = songs;
+    }
+
+
+    public DownloadImageTask(DownloadCallback callback,List<Song> songs) {
+        this.songs = songs;
+        this.callback = callback;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -38,12 +47,31 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     protected void onPostExecute(Bitmap result) {
 
-        if (result != null) {
-            for(Song song:songs){
+        for (Song song : songs) {
+            song.loadingIcon = false;
+            if (result != null) {
                 song.setIcon(result);
+                //Update Playing cover
+                Log.e("SONGNAME",song.getDisplayName());
+                if (PlayController.instance.activeSong.gid.equals(song.gid))
+                    PlayController.instance.updateSongCover();
             }
-            MainActivity.instance.listController.refreshList();
         }
 
+
+        if (result != null)
+            MainActivity.instance.listController.refreshList();
+
+
+        if(callback!=null)
+            callback.callback(result);
+        
+        
+    }
+
+    public static class DownloadCallback {
+
+        public void callback(Bitmap result) {
+        }
     }
 }

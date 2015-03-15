@@ -83,6 +83,26 @@ public class Utils {
         }
     }
 
+    /**
+     * Get the data download settings
+     * @return 0 high limitation
+     * 1 middle limitation
+     * 2 no limitation
+     */
+
+    public static int getDownloadDataLimitation() {
+
+        return  checkNetworkStatus();
+
+    }
+
+    /**
+     * RGet the network connection status
+     * @return Coonection type
+     * 0 No Network
+     * 1 3g
+     * 2 wifi
+     */
 
     public static int checkNetworkStatus() {
 
@@ -127,12 +147,12 @@ public class Utils {
         Rect bounds = new Rect();
         Paint textPaint = view.getPaint();
         textPaint.getTextBounds(text, 0, text.length(), bounds);
-     //   int height = bounds.height();
+        //   int height = bounds.height();
         int width = bounds.width();
         return width;
     }
 
-    public static String getEncodedUrl(String urlStr){
+    public static String getEncodedUrl(String urlStr) {
         URL url;
         try {
             url = new URL(urlStr);
@@ -147,7 +167,6 @@ public class Utils {
             return "";
         }
     }
-
 
 
 }

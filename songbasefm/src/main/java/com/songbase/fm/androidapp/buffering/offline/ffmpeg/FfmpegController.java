@@ -33,7 +33,7 @@ public class FfmpegController {
 	private String mCmdCat = "sh cat";
 
 	public FfmpegController(Context context, File fileTemp)
-			throws FileNotFoundException, IOException {
+			throws  IOException {
 		mFileTemp = fileTemp;
 
 		installBinaries(context, false);

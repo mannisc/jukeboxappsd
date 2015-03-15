@@ -36,6 +36,7 @@ import com.songbase.fm.androidapp.ui.viewmode.ExploreMode;
 import com.songbase.fm.androidapp.ui.viewmode.GenresMode;
 import com.songbase.fm.androidapp.ui.viewmode.MainMode;
 import com.songbase.fm.androidapp.ui.viewmode.MyMusicMode;
+import com.songbase.fm.androidapp.ui.viewmode.PopularMode;
 import com.songbase.fm.androidapp.ui.viewmode.SearchMode;
 import com.songbase.fm.androidapp.ui.viewmode.ViewMode;
 
@@ -64,14 +65,16 @@ public class UIController implements android.view.SurfaceHolder.Callback {
     //View Modes
     public static ViewMode viewMode;
 
-    public static int MODESCOUNT = 6;
+    public static int MODESCOUNT = 7;
 
-    public static int MAINMODE = 0;
-    public static int SEARCHMODE = 1;
-    public static int EXPLOREMODE = 2;
-    public static int GENRESMODE = 3;
-    public static int MYMUSICMODE = 4;
-    public static int CURRENTPLAYLISTMODE = 5;
+    public static int SEARCHMODE = 0;
+    public static int EXPLOREMODE = 1;
+    public static int GENRESMODE = 2;
+    public static int MYMUSICMODE = 3;
+    public static int CURRENTPLAYLISTMODE = 4;
+    public static int POPULARMODE = 5;
+    public static int MAINMODE = 6;
+
 
 
     private boolean softkeyboardVisible;
@@ -100,12 +103,13 @@ public class UIController implements android.view.SurfaceHolder.Callback {
 
         //View Modes
         viewModes = new ViewMode[MODESCOUNT];
-        viewModes[MAINMODE] = new MainMode().mode;
         viewModes[SEARCHMODE] = new SearchMode().mode;
         viewModes[EXPLOREMODE] = new ExploreMode().mode;
         viewModes[GENRESMODE] = new GenresMode().mode;
         viewModes[MYMUSICMODE] = new MyMusicMode().mode;
         viewModes[CURRENTPLAYLISTMODE] = new CurrentPlaylistMode().mode;
+        viewModes[POPULARMODE] = new PopularMode().mode;
+        viewModes[MAINMODE] = new MainMode().mode;
 
 
         for (ViewMode viewMode : viewModes) {

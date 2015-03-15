@@ -39,6 +39,8 @@ public class MainActivity extends Activity  {
     public AQuery aQuery;
     public boolean destroyed = false;
 
+    public boolean loaded = false;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -76,11 +78,9 @@ public class MainActivity extends Activity  {
 
         //Offline, load offline Data if already user, elsewhise ask to create account
 
+        persistenceController.loadStoredOfflineData();
 
-        if (Utils.checkNetworkStatus() == 0) {
-            persistenceController.loadStoredOfflineData();
-            persistenceController.saveOfflineData();
-        } else {
+        if (Utils.checkNetworkStatus() != 0) { //&&ettings.isLoggedIn Todo soll auch offline nicht einloggen wenn nicht angemeldet davor
             // Settings.setIsLoggedIn(false);
 
             // Nicht bereits eingeloggt
@@ -89,10 +89,11 @@ public class MainActivity extends Activity  {
                 startActivity(intent);
             } else {
                 // Auto login
-
                 accountController.singInAuto();
             }
         }
+
+        this.loaded = true;
     }
 
     @Override
@@ -120,6 +121,8 @@ public class MainActivity extends Activity  {
     protected void onDestroy() {
         super.onDestroy(); // Always call the superclass method first
         destroyed = true;
+        instance = null;
+
     }
 
     @Override

@@ -12,6 +12,10 @@ import com.songbase.fm.androidapp.list.ListAdapter;
 import com.songbase.fm.androidapp.list.MainListElement;
 import com.songbase.fm.androidapp.list.MainListElement.Action;
 import com.songbase.fm.androidapp.list.OptionListElement;
+import com.songbase.fm.androidapp.media.Playlist;
+import com.songbase.fm.androidapp.media.PlaylistListElement;
+import com.songbase.fm.androidapp.mymusic.MyMusicController;
+import com.songbase.fm.androidapp.popular.PopularController;
 import com.songbase.fm.androidapp.ui.UIController;
 
 public class MainMode extends ViewMode {
@@ -49,6 +53,13 @@ public class MainMode extends ViewMode {
 		}
 	}
 
+    public class PopularSongsAction implements Action {
+        @Override
+        public void execute() {
+            UIController.instance.setMode(UIController.POPULARMODE);
+        }
+    }
+
 	public class MyMusicAction implements Action {
 		@Override
 		public void execute() {
@@ -71,7 +82,9 @@ public class MainMode extends ViewMode {
 
 		//list.add(new OptionListElement("Genres", new GenresAction(),""));
 
-		list.add(new OptionListElement("My Playlists", new MyMusicAction(),"playlist"));
+        list.add(new PlaylistListElement(PopularController.instance.getPlaylist(), new PopularSongsAction()));
+
+        list.add(new OptionListElement("My Playlists", new MyMusicAction(),"playlist"));
 
 
         currentPlaylistElement = new OptionListElement("Current Playlist" , new CurrentPlaylistAction(),"currentplay");

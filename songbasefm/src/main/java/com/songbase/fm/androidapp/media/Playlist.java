@@ -21,29 +21,35 @@ public class Playlist extends MainListElement {
 
     List<MainListElement> list = new ArrayList<MainListElement>();
 
-    private Drawable icon;
+    public Drawable icon;
+    private transient static Drawable defaultIcon;
 
     public ListAdapter.ListLayout getListLayout() {
         return ListAdapter.ListLayout.NAME;
     }
 
-    public Playlist(String name, String gid,List<MainListElement> list) {
-
+    public Playlist(String name, String gid, List<MainListElement> list) {
         this.name = name;
         this.gid = gid;
         this.list = list;
-
-        int imageResource = MainActivity.instance.getResources().getIdentifier(
-                "playlist", "drawable", MainActivity.instance.getPackageName());
-        this.icon =  new BitmapDrawable(MainActivity.instance.getResources(),BitmapFactory.decodeResource(
-                MainActivity.instance.getResources(), imageResource));
+        this.icon = null;
 
     }
 
     public Drawable getIcon() {
+        if (icon == null) {
+            if (Playlist.defaultIcon == null) {
+                int imageResource = MainActivity.instance.getResources().getIdentifier(
+                        "playlist", "drawable", MainActivity.instance.getPackageName());
+                Playlist.defaultIcon = new BitmapDrawable(MainActivity.instance.getResources(), BitmapFactory.decodeResource(
+                        MainActivity.instance.getResources(), imageResource));
 
-        return this.icon;
+            }
+            return Playlist.defaultIcon;
+        } else
+            return this.icon;
     }
+
 
     public String getName() {
         return name;
@@ -51,6 +57,11 @@ public class Playlist extends MainListElement {
 
     public List<MainListElement> getList() {
         return list;
+    }
+
+
+    public void setList(List<MainListElement> list) {
+        this.list = list;
     }
 
     /**
